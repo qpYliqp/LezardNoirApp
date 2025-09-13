@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.repositories.AuthorRepository;
 import app.services.AuthorService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

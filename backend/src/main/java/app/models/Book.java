@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 public class Book {
 
@@ -35,6 +32,7 @@ public class Book {
 
     private String marketing;
 
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "book_author",
@@ -52,5 +50,9 @@ public class Book {
         authors.remove(author);
         author.getBooks().remove(this);
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id")
+    private Status globalStatus;
 
 }

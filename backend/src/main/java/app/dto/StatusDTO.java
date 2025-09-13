@@ -1,13 +1,12 @@
 package app.dto;
 
+import app.enums.StatusName;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-@Getter
-@Setter
-public class AuthorDTO {
+@Getter @Setter
+public class StatusDTO {
     private Long id;
     private String name;
+    private StatusName code;
 }

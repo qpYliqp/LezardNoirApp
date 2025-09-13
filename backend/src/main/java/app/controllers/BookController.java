@@ -2,12 +2,8 @@ package app.controllers;
 
 import app.dto.AuthorDTO;
 import app.dto.BookDTO;
-import app.exceptions.BookException;
-import app.mappers.BookMapper;
-import app.models.Author;
-import app.models.Book;
-import app.repositories.AuthorRepository;
-import app.repositories.BookRepository;
+import app.dto.StatusDTO;
+import app.models.Status;
 import app.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +31,13 @@ public class BookController {
     }
 
     @PostMapping("{bookId}/add/author")
-    public BookDTO addAuthorToBook(@PathVariable Long bookId, @RequestBody AuthorDTO author) {
+    public BookDTO addAuthor(@PathVariable Long bookId, @RequestBody AuthorDTO author) {
         return this.bookService.addAuthor(bookId, author.getId());
+    }
+
+    @PostMapping("{bookId}/update/status")
+    public BookDTO updateGlobalStatus(@PathVariable Long bookId, @RequestBody StatusDTO status) {
+        return this.bookService.updateGlobalStatus(bookId, status.getId());
     }
 
 }

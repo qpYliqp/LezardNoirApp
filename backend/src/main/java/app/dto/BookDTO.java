@@ -2,11 +2,10 @@ package app.dto;
 
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.Set;
 
 @Getter @Setter
-@NoArgsConstructor
 public class BookDTO {
     private long id;
     private String title;
@@ -18,4 +17,7 @@ public class BookDTO {
     private String summary;
     private String hook;
     private String marketing;
+    private StatusDTO globalStatus;
+    private Set<AuthorDTO> authors;
+
 }
