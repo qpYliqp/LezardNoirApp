@@ -1,6 +1,8 @@
 package app.controllers;
 
+import app.dto.BookDTO;
 import app.exceptions.BookException;
+import app.mappers.BookMapper;
 import app.models.Book;
 import app.repositories.BookRepository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +22,17 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return this.bookRepository.findAll();
+    public List<BookDTO> getAllBooks() {
+        return bookRepository.findAll()
+                .stream()
+                .map(BookMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable Long id) {
-        return bookRepository.findById(id)
+    public BookDTO getBookById(@PathVariable Long id) {
+        Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookException("Book not found with id: " + id));
+        return BookMapper.INSTANCE.toDTO(book);
     }
 }
