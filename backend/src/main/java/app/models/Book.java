@@ -1,15 +1,15 @@
 package app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Book {
 
@@ -34,5 +34,23 @@ public class Book {
     private String hook;
 
     private String marketing;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private Set<Author> authors = new HashSet<>();
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.getBooks().add(this);
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.getBooks().remove(this);
+    }
 
 }
