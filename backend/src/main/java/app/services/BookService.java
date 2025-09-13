@@ -24,8 +24,6 @@ public class BookService {
 
     private final StatusRepository statusRepository;
 
-
-
     public BookService(final BookRepository bookRepository, final AuthorRepository authorRepository, final StatusRepository statusRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
@@ -35,7 +33,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public List<BookDTO> getAllBooks() {
-        return bookRepository.findAll()
+        return this.bookRepository.findAll()
                 .stream()
                 .map(BookMapper.INSTANCE::toDTO)
                 .toList();
@@ -43,7 +41,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public BookDTO getBookById(Long bookId) {
-        Book book = bookRepository.findById(bookId)
+        Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
         return BookMapper.INSTANCE.toDTO(book);
     }
@@ -58,9 +56,7 @@ public class BookService {
                 .orElseThrow(() -> new AuthorException("Author not found with authorId: " + authorId));
 
         book.addAuthor(author);
-        BookDTO dto = BookMapper.INSTANCE.toDTO(book);
-        System.out.println(dto.getPrice());
-        return dto;
+        return BookMapper.INSTANCE.toDTO(book);
     }
 
     @Transactional
