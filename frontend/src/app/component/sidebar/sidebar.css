@@ -1,0 +1,5 @@
+@layer utilities {
+  .hover-unless-active:hover:not(.bg-secondary) {
+    @apply bg-third cursor-pointer;
+  }
+}
