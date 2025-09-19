@@ -1,10 +1,10 @@
-<div class="w-60 min-h-screen text-xl bg-black text-white flex flex-col border-r-3 border-r-secondary items-start justify-start">
+<div class="w-50  h-full  text-xl bg-black text-white flex-col border-r-3 border-r-secondary items-start justify-start">
   @for (button of sidebarButtons; track button.label) {
     <button
       [routerLink]="button.urlPath"
       routerLinkActive="bg-secondary"
       #isSelected="routerLinkActive"
-      [ngClass]="['p-5 mt-2 w-full flex items-start',isSelected.isActive ? 'bg-secondary' : 'hover:bg-third hover:cursor-pointer']">
+      [ngClass]="['p-4 mt-2 w-full flex items-start',isSelected.isActive ? 'bg-secondary' : 'hover:bg-third hover:cursor-pointer']">
       {{ button.label }}
     </button>
   }

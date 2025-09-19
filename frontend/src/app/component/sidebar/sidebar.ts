@@ -16,6 +16,7 @@ export class Sidebar {
 sidebarButtons : SidebarButton[] = [
   {label : "Tableau de bord", urlPath:"/board"},
   {label : "Calendrier", urlPath:"/calendar"},
+  {label : "Titres", urlPath:"/titles"},
 ]
 
 }

@@ -1,0 +1,54 @@
+<!--<div class="carousel-wrapper">-->
+<!--  <button class="nav prev" (click)="scroll(-1)" [style.visibility]="showNav ? 'visible' : 'hidden'">‹</button>-->
+
+<!--  <div class="carousel">-->
+<!--    <div class="carousel-track" #track>-->
+<!--      @for(book of books(); track book)-->
+<!--      {-->
+<!--        <div class="carousel-item">-->
+<!--          <p>{{ book.title }}</p>-->
+<!--        </div>-->
+<!--      }-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <button class="nav next" (click)="scroll(1)" [style.visibility]="showNav ? 'visible' : 'hidden'">›</button>-->
+<!--</div>-->
+
+
+<!-- Container avec navigation intégrée -->
+<div class="relative">
+  <swiper-container
+    [id]="'swiper-' + id()"
+    init="false"
+    class="swiper-custom"
+  >
+    @for(book of books(); track book.id)
+    {
+      <swiper-slide>
+        <div class="group hover:bg-secondary bg-third h-full block">
+          <p-card class="sm:h-40 h-20">
+            <ng-template #header>
+              <div>
+                <p class="hidden md:text-xl text-xs group-hover:block">{{book.title}}</p>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div></div>
+            </ng-template>
+          </p-card>
+        </div>
+      </swiper-slide>
+    }
+  </swiper-container>
+
+
+  <div class="swiper-button-prev swiper-button-prev-{{id()}}"
+       [style.visibility]="showNavigation && activeIndex! > 0 ? 'visible' : 'hidden'"
+
+  ></div>
+  <div class="swiper-button-next swiper-button-next-{{id()}}"
+       [style.visibility]="showNavigation && activeIndex! < (books().length - currentSlidesPerView) ? 'visible' : 'hidden'"
+  ></div>
+
+</div>

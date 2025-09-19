@@ -27,22 +27,3 @@ CREATE TABLE IF NOT EXISTS book_author (
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE
     );
 
--- Insert un auteur par défaut
-INSERT INTO author (name) VALUES ('Jean Dupont')
-    ON CONFLICT DO NOTHING;
-
--- Insert un livre par défaut
-INSERT INTO book (title, price, pages, isbn, nuart, note, summary, hook, marketing)
-VALUES (
-           'Mon Premier Livre', 19.90, 200, '123-4567890123', 'Roman', 'Note exemple',
-           'Résumé exemple', 'Accroche exemple', 'Marketing exemple'
-       )
-    ON CONFLICT DO NOTHING;
-
--- Lier le livre et l'auteur
-INSERT INTO book_author (book_id, author_id)
-VALUES (
-           (SELECT id FROM book WHERE title='Mon Premier Livre'),
-           (SELECT id FROM author WHERE name='Jean Dupont')
-       )
-    ON CONFLICT DO NOTHING;

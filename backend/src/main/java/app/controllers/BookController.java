@@ -4,10 +4,12 @@ import app.dto.AuthorDTO;
 import app.dto.BookDTO;
 import app.dto.StatusDTO;
 import app.models.Status;
+import app.models.filters.BookFilter;
 import app.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/books")
 @RestController
@@ -20,9 +22,24 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping
     public List<BookDTO> getAllBooks() {
         return this.bookService.getAllBooks();
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/letter")
+    public Map<String,List<BookDTO>> getAllBooksGroupedByLetter()
+    {
+        return this.bookService.getAllBooksGroupedByLetter();
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/letters-available")
+    public List<String> getAllBooksAvailableLetter()
+    {
+        return this.bookService.getAllBooksAvailableLetter();
     }
 
     @GetMapping("{bookId}")
