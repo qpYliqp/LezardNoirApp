@@ -1,6 +1,7 @@
 package app.dto;
 
 
+import app.configs.FileConst;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Set;
@@ -19,5 +20,17 @@ public class BookDTO {
     private String marketing;
     private StatusDTO globalStatus;
     private Set<AuthorDTO> authors;
+    private String coverFileName;
+
+    public void setCoverFileName(String coverFileName) {
+        if(coverFileName != null && !coverFileName.isEmpty())
+        {
+            this.coverFileName = FileConst.COVER_PATH + "/" + id + "/" + coverFileName;
+        }
+        else
+        {
+            this.coverFileName = null;
+        }
+    }
 
 }

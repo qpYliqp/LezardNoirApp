@@ -22,20 +22,17 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping
     public List<BookDTO> getAllBooks() {
         return this.bookService.getAllBooks();
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/letter")
     public Map<String,List<BookDTO>> getAllBooksGroupedByLetter()
     {
         return this.bookService.getAllBooksGroupedByLetter();
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/letters-available")
     public List<String> getAllBooksAvailableLetter()
     {

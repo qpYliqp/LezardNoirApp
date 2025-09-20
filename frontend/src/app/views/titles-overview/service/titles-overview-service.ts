@@ -12,14 +12,14 @@ export class TitlesOverviewService {
   constructor(private http: HttpClient) {}
 
   getAllBooksGroupedByLetter(): Observable<Map<string, Book[]>> {
-    return this.http.get<{ [key: string]: Book[] }>(`${this.apiUrl}/letter`).pipe(
-      tap(response => {
-        // on remplit le Map pour pouvoir accéder rapidement aux lettres
+    return this.http.get<{ [key: string]: any[] }>(`${this.apiUrl}/letter`).pipe(
+      map(response => {
+        const result = new Map<string, Book[]>();
         Object.entries(response).forEach(([letter, books]) => {
-          this.loadedBooks.set(letter, books);
+          result.set(letter, books.map(b=>new Book(b)));
         });
+        return result;
       }),
-      map(response => new Map(Object.entries(response))), // transforme l'objet en Map
       catchError(err => {
         console.error('Erreur lors du chargement des livres groupés par lettre:', err.message);
         return of(new Map());

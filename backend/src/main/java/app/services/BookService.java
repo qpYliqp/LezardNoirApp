@@ -14,11 +14,9 @@ import app.repositories.StatusRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -60,6 +58,7 @@ public class BookService {
 
         return groupedBooks;
     }
+
     @Transactional(readOnly = true)
     public List<String> getAllBooksAvailableLetter()
     {

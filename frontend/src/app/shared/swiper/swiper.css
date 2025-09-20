@@ -1,4 +1,3 @@
-/* Styles pour les boutons de navigation Swiper */
 .swiper-button-prev,
 .swiper-button-next {
   position: absolute !important;
@@ -15,13 +14,11 @@
   transition: all 0.3s ease;
 }
 
-/* Hover plus marqué */
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
   transform: scale(1.15);
 }
 
-/* Position des boutons */
 .swiper-button-prev {
   left: 10px !important;
 }
@@ -30,29 +27,27 @@
   right: 10px !important;
 }
 
-/* Forcer le sens des flèches */
 .swiper-button-prev::after {
-  content: '‹'; /* flèche gauche */
-  font-size: 28px;
-  font-weight: bold;
-  transform: rotate(0deg); /* on annule toute rotation par défaut */
-}
-
-.swiper-button-next::after {
-  content: '›'; /* flèche droite */
+  content: '‹';
   font-size: 28px;
   font-weight: bold;
   transform: rotate(0deg);
 }
 
-/* Conteneur swiper */
+.swiper-button-next::after {
+  content: '›';
+  font-size: 28px;
+  font-weight: bold;
+  transform: rotate(0deg);
+}
+
 .swiper-custom {
   width: 100%;
   height: auto;
-  padding: 0 60px; /* Espace pour les boutons */
+  padding: 0 60px;
 }
 
-/* Slides */
+
 .swiper-slide {
   display: flex;
   justify-content: center;
@@ -65,7 +60,6 @@
   display: none;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .swiper-button-prev,
   .swiper-button-next {

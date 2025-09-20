@@ -35,35 +35,8 @@ export class TitlesOverview {
 
   bookService = inject(TitlesOverviewService);
   carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex? : number }[] = [];
-  private swiperInstances: Map<string, any> = new Map();
-  currentSlidesPerView = 2;
-
-  breakpointsConfig = [
-    { width: 0, slidesPerView: 2, slidesPerGroup: 1, spaceBetween: 10 },
-    { width: 480, slidesPerView: 2, slidesPerGroup: 1, spaceBetween: 15 },
-    { width: 768, slidesPerView: 4, slidesPerGroup: 1, spaceBetween: 15 },
-    { width: 1024, slidesPerView: 6, slidesPerGroup: 1, spaceBetween: 20 },
-    { width: 1280, slidesPerView: 9, slidesPerGroup: 1, spaceBetween: 20 },
-  ];
-
 
   constructor() {}
-
-  // Méthode corrigée qui retourne une chaîne JSON
-  getNavigationConfigString(letter: string): string {
-    return JSON.stringify({
-      nextEl: `.swiper-button-next-${letter}`,
-      prevEl: `.swiper-button-prev-${letter}`
-    });
-  }
-
-  // Gardez aussi l'ancienne méthode si nécessaire pour d'autres usages
-  getNavigationConfig(letter: string) {
-    return {
-      nextEl: `.swiper-button-next-${letter}`,
-      prevEl: `.swiper-button-prev-${letter}`
-    };
-  }
 
   ngOnInit() {
     this.bookService.getAllBooksGroupedByLetter().subscribe({
@@ -72,8 +45,6 @@ export class TitlesOverview {
           letter,
           books
         }));
-
-
       },
       error: (err) => {
         console.error('Erreur lors du chargement des livres groupés par lettre:', err.message);

@@ -55,4 +55,7 @@
         @JoinColumn(name = "status_id")
         private Status globalStatus;
 
+        @Column(name="cover_filename")
+        private String coverFileName;
+
     }

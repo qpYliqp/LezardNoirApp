@@ -9,6 +9,7 @@
 @theme
 {
   --color-primary: oklch(0 0 0);
+  --color-primary-opacity: rgba(0,0,0,0.3);
   --color-secondary: #737373;
   --color-third: #2E2F2B;
   --color-white: oklch(1 0 0);

@@ -13,6 +13,8 @@ import {Navigation} from 'swiper/modules';
   ],
   templateUrl: './swiper.html',
   styleUrl: './swiper.css',
+  //Dans mes templates, il est possible que j’utilise des éléments HTML personnalisés que Angular ne connaît pas encore. Ne me génère pas d’erreur pour ça.
+  //Utile pour les Web Components
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Swiper {
@@ -20,6 +22,13 @@ export class Swiper {
 
   books = input<Book[]>([]);
   id = input<string>("");
+
+  // @Input()
+  // set books(value: Book[]) {
+  //   this._books = value;
+  //   this.updateSwiper();
+  // }
+
 
   currentSlidesPerView = 2;
   showNavigation = false;
@@ -101,5 +110,5 @@ export class Swiper {
     this.swiperInstance = swiperEl.swiper;
     this.activeIndex = this.swiperInstance.activeIndex;
   }
-  
+
 }
