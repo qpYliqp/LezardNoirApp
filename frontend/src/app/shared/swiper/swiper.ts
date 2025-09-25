@@ -4,12 +4,11 @@ import {Book} from '../../models/Book';
 import {Card} from 'primeng/card';
 import {PrimeTemplate} from 'primeng/api';
 import {Navigation} from 'swiper/modules';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-swiper',
   imports: [
-    Card,
-    PrimeTemplate
   ],
   templateUrl: './swiper.html',
   styleUrl: './swiper.css',
@@ -109,6 +108,10 @@ export class Swiper {
 
     this.swiperInstance = swiperEl.swiper;
     this.activeIndex = this.swiperInstance.activeIndex;
+  }
+
+  getHeightForWidth(imgWidth: number, intrinsicWidth: number, intrinsicHeight: number) {
+    return Math.round(imgWidth * (intrinsicHeight / intrinsicWidth));
   }
 
 }

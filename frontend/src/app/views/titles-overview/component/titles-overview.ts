@@ -17,13 +17,19 @@ import {Card} from 'primeng/card';
 // import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
 import {Swiper} from '../../../shared/swiper/swiper';
+import {Button} from 'primeng/button';
+import {FloatLabel} from 'primeng/floatlabel';
+import {InputText} from 'primeng/inputtext';
+import {DatePicker} from 'primeng/datepicker';
+import {FormCreateBook} from '../../../shared/forms/form-create-book/form-create-book';
 
 @Component({
   selector: 'app-titles-overview',
   imports: [
     CarouselModule,
-    Card,
     Swiper,
+    FormCreateBook,
+
   ],
   providers: [TitlesOverviewService],
   encapsulation: ViewEncapsulation.None,
@@ -35,6 +41,9 @@ export class TitlesOverview {
 
   bookService = inject(TitlesOverviewService);
   carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex? : number }[] = [];
+  isCreatingBook: boolean = false;
+
+  isCreating : boolean = true;
 
   constructor() {}
 
@@ -52,6 +61,10 @@ export class TitlesOverview {
     });
   }
 
+  public createBook()
+  {
+    console.log("hehe")
+  }
 
 
 }
