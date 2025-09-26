@@ -1,1 +1,82 @@
-<p>form-book-details works!</p>
+<form
+  #formBookDetail="ngForm"
+  class=" pt-5 h-full flex">
+  <div class="flex md:flex-row items-center flex-col">
+    <div class="flex flex-col justify-center flex-2 gap-10 flex-2">
+      <div class="flex md:flex-row flex-col items-center gap-5">
+        <p-floatlabel>
+          <input
+            #title="ngModel"
+            [(ngModel)]="bookDetail.title"
+            autocomplete="off"
+            class="bg-third w-50 text-white border-none outline-secondary"
+            name="title"
+            pInputText
+            required/> <label
+          [class]="title.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Titre</label>
+        </p-floatlabel>
+        <p-floatlabel>
+          <input
+            #isbn="ngModel"
+            [(ngModel)]="bookDetail.isbn"
+            autocomplete="off"
+            class="bg-third w-50 text-white border-none outline-secondary"
+            name="isbn"
+            pInputText
+            required/> <label
+          [class]="isbn.invalid && hasSubmited ? 'text-error' : 'text-secondary'">ISBN</label>
+        </p-floatlabel>
+      </div>
+      <div class="flex md:flex-row flex-col items gap-5">
+        <p-floatlabel>
+          <p-inputNumber
+            #price="ngModel"
+            [(ngModel)]="bookDetail.price"
+            [minFractionDigits]="2"
+            autocomplete="off"
+            currency="EUR"
+            inputStyleClass="w-50"
+            mode="currency"
+            name="price"
+            required/>
+          <label [class]="price.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Prix</label>
+        </p-floatlabel>
+        <p-floatlabel>
+          <p-inputNumber
+            #pages="ngModel"
+            [(ngModel)]="bookDetail.pages"
+            [minFractionDigits]="0"
+            autocomplete="off"
+            inputStyleClass="w-50"
+            name="pages"
+            required/>
+          <label [class]="pages.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Pages</label>
+        </p-floatlabel>
+      </div>
+      <div class="flex md:flex-row flex-col items gap-5">
+        <p-floatlabel>
+          <p-datePicker
+            #date="ngModel"
+            [(ngModel)]="bookDetail.date"
+            appendTo="body"
+            class="bg-third text-white border-none outline-secondary max-w-50"
+            name="date"
+            required/>
+          <label [class]="date.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Date de sortie</label>
+        </p-floatlabel>
+        <p-floatlabel>
+          <input
+            #nuart="ngModel"
+            [(ngModel)]="bookDetail.nuart"
+            autocomplete="off"
+            class="bg-third w-50 text-white border-none outline-secondary"
+            name="nuart"
+            pInputText
+            required/> <label
+          [class]="nuart.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Nuart</label>
+        </p-floatlabel>
+      </div>
+    </div>
+    <app-image-upload class="self-stretch flex-1 overflow-hidden"></app-image-upload>
+  </div>
+</form>

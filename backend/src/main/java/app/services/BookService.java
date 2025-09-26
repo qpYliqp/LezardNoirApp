@@ -60,8 +60,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getAllBooksAvailableLetter()
-    {
+    public List<String> getAllBooksAvailableLetter() {
         return this.bookRepository.findAllAvailableLetters();
     }
 
@@ -73,8 +72,7 @@ public class BookService {
     }
 
     @Transactional
-    public BookDTO addAuthor(Long bookId, Long authorId)
-    {
+    public BookDTO addAuthor(Long bookId, Long authorId) {
         Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
 
@@ -86,13 +84,20 @@ public class BookService {
     }
 
     @Transactional
-    public BookDTO updateGlobalStatus(Long bookId, Long statusId)
-    {
+    public BookDTO updateGlobalStatus(Long bookId, Long statusId) {
         Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
         Status status = this.statusRepository.findById(statusId)
                 .orElseThrow(() -> new StatusException("Author not found with authorId: " + statusId));
         book.setGlobalStatus(status);
+        return BookMapper.INSTANCE.toDTO(book);
+    }
+
+
+    @Transactional
+    public BookDTO createBook(BookDTO dto) {
+        Book book = BookMapper.INSTANCE.toEntity(dto);
+        bookRepository.save(book);
         return BookMapper.INSTANCE.toDTO(book);
     }
 }

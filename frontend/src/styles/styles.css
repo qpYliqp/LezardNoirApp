@@ -14,6 +14,7 @@
     --p-primary-hover-color: var(--color-secondary);
     --p-stepper-separator-active-background: white;
     --p-stepper-separator-background: var(--color-secondary);
+    --p-stepper-steppanel-background: var(--color-primary);
 
   }
   @theme
@@ -26,6 +27,14 @@
 
     --color-white: oklch(1 0 0);
   }
+
+
+
+  .p-steppanel  .p-stepper-separator
+  {
+    @apply hidden;
+  }
+
 
   .overlay {
     @apply fixed top-0 left-0 w-screen h-screen bg-primary/60 flex justify-center items-center z-[2];

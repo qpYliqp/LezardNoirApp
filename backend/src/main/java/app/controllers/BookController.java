@@ -3,8 +3,6 @@ package app.controllers;
 import app.dto.AuthorDTO;
 import app.dto.BookDTO;
 import app.dto.StatusDTO;
-import app.models.Status;
-import app.models.filters.BookFilter;
 import app.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +26,12 @@ public class BookController {
     }
 
     @GetMapping("/letter")
-    public Map<String,List<BookDTO>> getAllBooksGroupedByLetter()
-    {
+    public Map<String, List<BookDTO>> getAllBooksGroupedByLetter() {
         return this.bookService.getAllBooksGroupedByLetter();
     }
 
     @GetMapping("/letters-available")
-    public List<String> getAllBooksAvailableLetter()
-    {
+    public List<String> getAllBooksAvailableLetter() {
         return this.bookService.getAllBooksAvailableLetter();
     }
 
@@ -52,6 +48,12 @@ public class BookController {
     @PostMapping("{bookId}/update/status")
     public BookDTO updateGlobalStatus(@PathVariable Long bookId, @RequestBody StatusDTO status) {
         return this.bookService.updateGlobalStatus(bookId, status.getId());
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping
+    public BookDTO createBook(@RequestBody BookDTO book) {
+        return bookService.createBook(book);
     }
 
 }

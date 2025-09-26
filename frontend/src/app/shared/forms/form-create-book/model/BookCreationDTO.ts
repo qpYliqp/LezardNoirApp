@@ -1,12 +1,12 @@
 export class BookCreationDTO
 {
-  title: string = "";
-  isbn: string = "";
+  title: string | null = null;
+  isbn: string | null = null;
   price: number | null = null;
   pages: number | null = null;
-  nuart: string=  "";
+  nuart: string | null = null;
   date: Date | null = null;
-  summary: string = "";
-  hook: string = "";
-  coverFileName: string = "";
+  summary: string | null = null;
+  hook: string | null = null;
+  marketing: string | null = null;
 }

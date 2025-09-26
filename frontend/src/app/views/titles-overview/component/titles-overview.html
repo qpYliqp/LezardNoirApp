@@ -1,27 +1,25 @@
-
-@if(isCreating) {
+@if (isCreating) {
   <app-form-create-book></app-form-create-book>
 }
 
 <div class="flex flex-col h-full ">
 
-    <div class="sm:flex sm:items-center sm:justify-between sm:p-5 sm:border-b-2 sm:border-secondary hidden">
+  <div class="sm:flex sm:items-center sm:justify-between sm:p-5 sm:border-b-2 sm:border-secondary hidden">
 
-      <button
-        class="text-xs md:text-sm bg-third px-3 py-2 hover:cursor-pointer hover:bg-secondary transition"
-        (click)="createBook()">
-        Nouveau livre
-      </button>
-    </div>
+    <button
+      (click)="createBook()"
+      class="text-xs md:text-sm bg-third px-3 py-2 hover:cursor-pointer hover:bg-secondary transition">
+      Nouveau livre
+    </button>
+  </div>
 
-    <div class="flex-1 overflow-y-auto px-5 pt-10 border-secondary">
-      @for(carousel of carousels; track carousel.letter)
-      {
-        <div class="flex flex-col mb-10">
-          <p class="text-2xl mb-2">{{carousel.letter}}</p>
-          <app-swiper [books]="carousel.books" [id]="carousel.letter"></app-swiper>
-        </div>
-      }
-    </div>
+  <div class="flex-1 overflow-y-auto px-5 pt-10 border-secondary">
+    @for (carousel of carousels; track carousel.letter) {
+      <div class="flex flex-col mb-10">
+        <p class="text-2xl mb-2">{{ carousel.letter }}</p>
+        <app-swiper [books]="carousel.books" [id]="carousel.letter"></app-swiper>
+      </div>
+    }
+  </div>
 
 </div>
