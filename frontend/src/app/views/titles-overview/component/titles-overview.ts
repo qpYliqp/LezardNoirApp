@@ -26,7 +26,7 @@ export class TitlesOverview {
   carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex?: number }[] = [];
   isCreatingBook: boolean = false;
 
-  isCreating: boolean = true;
+  isCreating: boolean = false;
 
   constructor() {
   }
