@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, inject, OnInit, Output, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ButtonDirective} from 'primeng/button';
 import {Step, StepList, StepPanel, Stepper} from 'primeng/stepper';
@@ -32,6 +32,7 @@ import {BookFormService} from './service/book-form-service';
 
 
 export class FormCreateBook implements OnInit {
+  @Output() closeModal = new EventEmitter<void>();
 
   currentStep: number = 0;
 
@@ -54,15 +55,9 @@ export class FormCreateBook implements OnInit {
 
       case 1:
         if (this.formBookMarketing?.onSubmit()) {
-          console.log("non")
-          this.currentStep++;
+          this.bookFormService.createBook(this.bookFormStore.book());
+          this.closeBookForm();
         }
-        console.log("wtf")
-        break;
-
-      case 2:
-        console.log("oui?")
-        this.bookFormService.updateBook(this.bookFormStore.book());
         break;
 
 
@@ -74,6 +69,11 @@ export class FormCreateBook implements OnInit {
   previousStep() {
     if (this.currentStep > 0)
       this.currentStep--;
+  }
+
+  closeBookForm() {
+    this.bookFormStore.resetBook();
+    this.closeModal.emit();
   }
 
 

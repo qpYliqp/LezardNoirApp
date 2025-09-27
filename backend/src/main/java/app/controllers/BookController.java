@@ -50,8 +50,7 @@ public class BookController {
         return this.bookService.updateGlobalStatus(bookId, status.getId());
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
-    @PostMapping
+    @PostMapping()
     public BookDTO createBook(@RequestBody BookDTO book) {
         return bookService.createBook(book);
     }

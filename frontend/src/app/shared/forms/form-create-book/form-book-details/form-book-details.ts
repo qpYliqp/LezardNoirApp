@@ -7,6 +7,8 @@ import {InputNumber} from 'primeng/inputnumber';
 import {InputText} from 'primeng/inputtext';
 import {BookDetailsFormDTO} from './model/BookDetailsFormDTO';
 import {BookFormStore} from '../store/BookFormStore';
+import {IsbnValidator} from '../../directives/isbn-validator';
+import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
 
 @Component({
   selector: 'app-form-book-details',
@@ -17,9 +19,11 @@ import {BookFormStore} from '../store/BookFormStore';
     ImageUpload,
     InputNumber,
     InputText,
-    FormsModule
+    FormsModule,
+    IsbnValidator,
+    NgxMaskDirective
   ],
-  providers: [BookFormStore],
+  providers: [BookFormStore, provideNgxMask()],
   templateUrl: './form-book-details.html',
   styleUrl: './form-book-details.css'
 })

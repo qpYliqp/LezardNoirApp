@@ -1,26 +1,9 @@
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  ElementRef,
-  inject,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ViewEncapsulation,
-  AfterViewInit, HostListener
-} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, ViewEncapsulation} from '@angular/core';
 import {Book} from '../../../models/Book';
 import {TitlesOverviewService} from '../service/titles-overview-service';
-import {AsyncPipe} from '@angular/common';
 import {CarouselModule} from 'primeng/carousel';
-import {Card} from 'primeng/card';
 // import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
 import {Swiper} from '../../../shared/swiper/swiper';
-import {Button} from 'primeng/button';
-import {FloatLabel} from 'primeng/floatlabel';
-import {InputText} from 'primeng/inputtext';
-import {DatePicker} from 'primeng/datepicker';
 import {FormCreateBook} from '../../../shared/forms/form-create-book/form-create-book';
 
 @Component({
@@ -40,12 +23,13 @@ import {FormCreateBook} from '../../../shared/forms/form-create-book/form-create
 export class TitlesOverview {
 
   bookService = inject(TitlesOverviewService);
-  carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex? : number }[] = [];
+  carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex?: number }[] = [];
   isCreatingBook: boolean = false;
 
-  isCreating : boolean = true;
+  isCreating: boolean = true;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit() {
     this.bookService.getAllBooksGroupedByLetter().subscribe({
@@ -61,8 +45,15 @@ export class TitlesOverview {
     });
   }
 
-  public createBook()
-  {
+  openBookForm() {
+    this.isCreating = true;
+  }
+
+  onCloseBookForm() {
+    this.isCreating = false;
+  }
+
+  public createBook() {
     console.log("hehe")
   }
 

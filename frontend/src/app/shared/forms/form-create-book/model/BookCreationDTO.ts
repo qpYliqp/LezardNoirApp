@@ -1,5 +1,4 @@
-export class BookCreationDTO
-{
+export class BookCreationDTO {
   title: string | null = null;
   isbn: string | null = null;
   price: number | null = null;
@@ -9,4 +8,5 @@ export class BookCreationDTO
   summary: string | null = null;
   hook: string | null = null;
   marketing: string | null = null;
+  note: string | null = null;
 }
