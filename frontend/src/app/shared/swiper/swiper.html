@@ -1,49 +1,52 @@
-<div class="relative">
+<div class="flex flex-row items-center justify-center">
+  <button class="swiper-button-prev-{{id()}} hover:cursor-pointer">
+    <i class="pi pi-angle-left"></i>
+  </button>
   <swiper-container
     [id]="'swiper-' + id()"
-    init="false"
+    breakpoints='{
+      "0":    { "slidesPerView": 2, "slidesPerGroup": 5, "spaceBetween": 10 },
+      "480":  { "slidesPerView": 2, "slidesPerGroup": 5, "spaceBetween": 15 },
+      "768":  { "slidesPerView": 4, "slidesPerGroup": 5, "spaceBetween": 15 },
+      "1024": { "slidesPerView": 6, "slidesPerGroup": 5, "spaceBetween": 20 },
+      "1280": { "slidesPerView": 9, "slidesPerGroup": 5, "spaceBetween": 20 }
+    }'
     class="swiper-custom"
-  >
-    @for(book of books(); track book.id)
-    {
+    init="false"
+    loop="false"
+    modules="modules"
+    slides-per-group="5"
+    slides-per-view="9"
+    space-between="15">
+    @for (book of books(); track book.id) {
       <swiper-slide>
         <div class=" bg-third h-full block">
           <div class="sm:h-40 h-20 transform transition-transform duration-300 ease-in-out hover:scale-105">
-              @if(book.coverFileName != null)
-              {
-                <div class="group  h-full overflow-hidden flex items-center justify-center">
-                  <img
-                    loading="lazy"
-                    src="{{book.coverFileName}}"
-                    class="w-full h-full object-cover"
-                  >
-                  <div class="hidden group-hover:flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
-                    <p class="md:text-sm text-xs bg-primary  p-2 rounded">
-                      {{book.title}}
-                    </p>
-                  </div>
+            @if (book.coverFileName != null) {
+              <div class="group h-full overflow-hidden flex items-center justify-center">
+                <img
+                  loading="lazy"
+                  src="{{book.coverFileName}}"
+                  class="w-full h-full object-cover">
+                <div class="hidden group-hover:flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
+                  <p class="md:text-sm text-xs bg-primary p-2 rounded break-words whitespace-normal text-center max-w-[90%]">
+                    {{ book.title }} </p>
                 </div>
-              } @else {
-                <div class="group  overflow-hidden flex items-center justify-center">
-                  <div class=" flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
-                    <p class="md:text-sm text-xs  p-2 rounded">
-                      {{book.title}}
-                    </p>
-                  </div>
-                </div>              }
+              </div>
+            } @else {
+              <div class="group overflow-hidden flex items-center justify-center">
+                <div class="flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
+                  <p class="md:text-sm text-xs p-2 rounded break-words whitespace-normal text-center max-w-[90%]">
+                    {{ book.title }} </p>
+                </div>
+              </div>
+            }
           </div>
         </div>
       </swiper-slide>
     }
   </swiper-container>
-
-
-  <div class="swiper-button-prev swiper-button-prev-{{id()}}"
-       [style.visibility]="showNavigation && activeIndex! > 0 ? 'visible' : 'hidden'"
-
-  ></div>
-  <div class="swiper-button-next swiper-button-next-{{id()}}"
-       [style.visibility]="showNavigation && activeIndex! < (books().length - currentSlidesPerView) ? 'visible' : 'hidden'"
-  ></div>
-
+  <button class=" swiper-button-next-{{id()}} hover:cursor-pointer">
+    <i class="pi pi-angle-right"></i>
+  </button>
 </div>

@@ -1,19 +1,37 @@
-import {Injectable} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {catchError, map, Observable, of} from 'rxjs';
+import {catchError, map, of} from 'rxjs';
 import {Book} from '../../../models/Book';
 import {apiURL} from '../../../../contants';
 
 @Injectable()
 export class TitlesOverviewService {
-  private loadedBooks = new Map<string, Book[]>();
+  private booksGroupedByLetter = signal<Map<string, Book[]>>(new Map());
+
+  readonly booksGrouped = this.booksGroupedByLetter.asReadonly();
   private apiUrl = apiURL + "books";
 
   constructor(private http: HttpClient) {
+    this.loadBooks()
   }
 
-  getAllBooksGroupedByLetter(): Observable<Map<string, Book[]>> {
-    return this.http.get<{ [key: string]: any[] }>(`${this.apiUrl}/letter`).pipe(
+  public addAllBookGroupedByLetter(book: Book) {
+    if (!book || !book.title) {
+      return;
+    }
+
+    const firstLetter = book.title.charAt(0).toUpperCase();
+    const currentBooks = this.booksGroupedByLetter();
+    const updatedBooks = new Map(currentBooks);
+    const booksForLetter = updatedBooks.get(firstLetter) || [];
+    booksForLetter.push(book);
+    updatedBooks.set(firstLetter, booksForLetter);
+    this.booksGroupedByLetter.set(updatedBooks);
+  }
+
+
+  private loadBooks(): void {
+    this.http.get<{ [key: string]: any[] }>(`${this.apiUrl}/letter`).pipe(
       map(response => {
         const result = new Map<string, Book[]>();
         Object.entries(response).forEach(([letter, books]) => {
@@ -25,11 +43,9 @@ export class TitlesOverviewService {
         console.error('Erreur lors du chargement des livres groupés par lettre:', err.message);
         return of(new Map());
       })
-    );
-  }
-
-  updateAllBookGroupedByLetter(book: Book) {
-
+    ).subscribe(booksMap => {
+      this.booksGroupedByLetter.set(booksMap);
+    });
   }
 
 }

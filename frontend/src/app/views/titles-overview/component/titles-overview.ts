@@ -1,5 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, inject, ViewEncapsulation} from '@angular/core';
-import {Book} from '../../../models/Book';
+import {Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, ViewEncapsulation} from '@angular/core';
 import {TitlesOverviewService} from '../service/titles-overview-service';
 import {CarouselModule} from 'primeng/carousel';
 // import Swiper from 'swiper';
@@ -23,26 +22,21 @@ import {FormCreateBook} from '../../../shared/forms/form-create-book/form-create
 export class TitlesOverview {
 
   bookService = inject(TitlesOverviewService);
-  carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex?: number }[] = [];
-  isCreatingBook: boolean = false;
-
+  carousels = computed(() => {
+    console.log("computed carousels")
+    const booksMap = this.bookService.booksGrouped();
+    return Array.from(booksMap.entries()).map(([letter, books]) => ({
+      letter,
+      books
+    }));
+  });
   isCreating: boolean = false;
 
   constructor() {
   }
 
   ngOnInit() {
-    this.bookService.getAllBooksGroupedByLetter().subscribe({
-      next: (map) => {
-        this.carousels = Array.from(map.entries()).map(([letter, books]) => ({
-          letter,
-          books
-        }));
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des livres groupés par lettre:', err.message);
-      }
-    });
+
   }
 
   openBookForm() {

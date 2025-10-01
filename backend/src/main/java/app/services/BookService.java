@@ -1,6 +1,7 @@
 package app.services;
 
 import app.dto.BookDTO;
+import app.dto.BookUpdateDTO;
 import app.exceptions.AuthorException;
 import app.exceptions.BookException;
 import app.exceptions.StatusException;
@@ -13,10 +14,18 @@ import app.repositories.BookRepository;
 import app.repositories.StatusRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BookService {
@@ -95,9 +104,30 @@ public class BookService {
 
 
     @Transactional
-    public BookDTO createBook(BookDTO dto) {
-        Book book = BookMapper.INSTANCE.toEntity(dto);
+    public BookDTO createBook(BookUpdateDTO dto) throws IOException {
+        Book book = BookMapper.INSTANCE.fromupdateDTOtoEntity(dto);
+
+        // Sauvegarde du fichier si présent
+        if (dto.getCoverFile() != null && !dto.getCoverFile().isEmpty()) {
+            String filename = StringUtils.cleanPath(Objects.requireNonNull(dto.getCoverFile().getOriginalFilename()));
+            Path uploadPath = Paths.get("uploads/");
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = dto.getCoverFile().getInputStream()) {
+                Path filePath = uploadPath.resolve(filename);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Stocker le nom du fichier dans l'entité
+            book.setCoverFileName(filename);
+        }
+
+        // Sauvegarder le livre dans tous les cas
         bookRepository.save(book);
+
         return BookMapper.INSTANCE.toDTO(book);
     }
 }

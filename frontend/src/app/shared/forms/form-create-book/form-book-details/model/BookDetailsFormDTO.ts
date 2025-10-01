@@ -6,5 +6,6 @@ export class BookDetailsFormDTO {
   pages: number | null = null;
   date: Date | null = null;
   nuart: string | null = null;
+  coverFile: File | null = null;
 
 }

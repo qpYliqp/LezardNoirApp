@@ -43,6 +43,10 @@ export class FormBookDetails {
     }
   }
 
+  onImageSelected(file: File) {
+    this.bookDetail.coverFile = file;
+  }
+
   public onSubmit(): boolean {
     this.hasSubmited = true;
     if (this.formBookDetail && this.formBookDetail.valid) {

@@ -2,10 +2,12 @@ package app.controllers;
 
 import app.dto.AuthorDTO;
 import app.dto.BookDTO;
+import app.dto.BookUpdateDTO;
 import app.dto.StatusDTO;
 import app.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +53,7 @@ public class BookController {
     }
 
     @PostMapping()
-    public BookDTO createBook(@RequestBody BookDTO book) {
+    public BookDTO createBook(@ModelAttribute BookUpdateDTO book) throws IOException {
         return bookService.createBook(book);
     }
 

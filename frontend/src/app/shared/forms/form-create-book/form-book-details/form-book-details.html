@@ -1,7 +1,7 @@
 <form
   #formBookDetail="ngForm"
   class="pt-5 h-full flex w-full">
-  <div class="flex md:flex-row md:items-start p-2 justify-end  items-center flex-col w-full">
+  <div class="flex md:flex-row md:items-start p-1 justify-end  items-center flex-col w-full">
     <div class="flex flex-col justify-end flex-2 gap-6 flex-2">
       <div class="flex md:flex-row flex-col  items-center gap-5">
         <div class="flex flex-col w-full md:w-auto">
@@ -25,7 +25,7 @@
           <div class="h-6 flex justify-end items-start">
             <small
               [class]="title.invalid && hasSubmited ? 'opacity-100' : 'opacity-0'"
-              class="text-error text-xs transition-opacity duration-200">
+              class="text-error text-xs">
               @if (title.invalid && hasSubmited) {
                 Champ requis
               }
@@ -57,7 +57,7 @@
           <div class="h-6 flex justify-end items-start">
             <small
               [class]="isbn.invalid && hasSubmited ? 'opacity-100' : 'opacity-0'"
-              class="text-error text-xs transition-opacity duration-200">
+              class="text-error text-xs ">
               @if (isbn.errors?.['invalidIsbnFormat'] || isbn.errors?.['required']) {
                 {{ isbn.errors?.['invalidIsbnFormat']?.message || 'Champ requis' }}
               }
@@ -87,7 +87,7 @@
           <div class="h-6 flex justify-end items-start">
             <small
               [class]="price.invalid && hasSubmited ? 'opacity-100' : 'opacity-0'"
-              class="text-error text-xs transition-opacity duration-200">
+              class="text-error text-xs ">
               @if (price.invalid && hasSubmited) {
                 Champ requis
               }
@@ -113,7 +113,7 @@
           <div class="h-6 flex justify-end items-start">
             <small
               [class]="pages.invalid && hasSubmited ? 'opacity-100' : 'opacity-0'"
-              class="text-error text-xs transition-opacity duration-200">
+              class="text-error text-xs ">
               @if (pages.invalid && hasSubmited) {
                 Champ requis
               }
@@ -140,7 +140,7 @@
           <div class="h-6 flex justify-end items-start">
             <small
               [class]="date.invalid && hasSubmited ? 'opacity-100' : 'opacity-0'"
-              class="text-error text-xs transition-opacity duration-200">
+              class="text-error text-xs">
               @if (date.invalid && hasSubmited) {
                 Champ requis
               }
@@ -166,7 +166,7 @@
           <div class="h-6 flex justify-end items-start">
             <small
               [class]="nuart.invalid && hasSubmited ? 'opacity-100' : 'opacity-0'"
-              class="text-error text-xs transition-opacity duration-200">
+              class="text-error text-xs">
               @if (nuart.invalid && hasSubmited) {
                 Champ requis
               }
@@ -175,6 +175,8 @@
         </div>
       </div>
     </div>
-    <app-image-upload class="self-stretch flex-1 overflow-hidden"></app-image-upload>
+    <app-image-upload
+      (fileSelected)="onImageSelected($event)"
+      class="self-stretch flex-1 overflow-hidden"></app-image-upload>
   </div>
 </form>
