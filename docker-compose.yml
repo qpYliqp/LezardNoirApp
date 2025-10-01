@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: angular_app
     ports:
-      - "3000:3000"
+      - "4200:4200"
     depends_on:
       - backend
     networks:

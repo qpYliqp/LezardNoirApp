@@ -1,6 +1,7 @@
 package app.services;
 
 import app.dto.BookDTO;
+import app.dto.BookUpdateDTO;
 import app.exceptions.AuthorException;
 import app.exceptions.BookException;
 import app.exceptions.StatusException;
@@ -13,10 +14,18 @@ import app.repositories.BookRepository;
 import app.repositories.StatusRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BookService {
@@ -60,8 +69,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getAllBooksAvailableLetter()
-    {
+    public List<String> getAllBooksAvailableLetter() {
         return this.bookRepository.findAllAvailableLetters();
     }
 
@@ -73,8 +81,7 @@ public class BookService {
     }
 
     @Transactional
-    public BookDTO addAuthor(Long bookId, Long authorId)
-    {
+    public BookDTO addAuthor(Long bookId, Long authorId) {
         Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
 
@@ -86,13 +93,41 @@ public class BookService {
     }
 
     @Transactional
-    public BookDTO updateGlobalStatus(Long bookId, Long statusId)
-    {
+    public BookDTO updateGlobalStatus(Long bookId, Long statusId) {
         Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
         Status status = this.statusRepository.findById(statusId)
                 .orElseThrow(() -> new StatusException("Author not found with authorId: " + statusId));
         book.setGlobalStatus(status);
+        return BookMapper.INSTANCE.toDTO(book);
+    }
+
+
+    @Transactional
+    public BookDTO createBook(BookUpdateDTO dto) throws IOException {
+        Book book = BookMapper.INSTANCE.fromupdateDTOtoEntity(dto);
+
+        // Sauvegarde du fichier si présent
+        if (dto.getCoverFile() != null && !dto.getCoverFile().isEmpty()) {
+            String filename = StringUtils.cleanPath(Objects.requireNonNull(dto.getCoverFile().getOriginalFilename()));
+            Path uploadPath = Paths.get("uploads/");
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = dto.getCoverFile().getInputStream()) {
+                Path filePath = uploadPath.resolve(filename);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Stocker le nom du fichier dans l'entité
+            book.setCoverFileName(filename);
+        }
+
+        // Sauvegarder le livre dans tous les cas
+        bookRepository.save(book);
+
         return BookMapper.INSTANCE.toDTO(book);
     }
 }

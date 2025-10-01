@@ -1,38 +1,41 @@
 @import "tailwindcss";
 @import 'primeicons/primeicons.css';
 
-
 @layer tailwind, primeng;
 
-
-
-
-@layer tailwind
-{
+@layer tailwind {
   :root {
     --p-primary-color: var(--color-primary);
     --p-primary-hover-color: var(--color-secondary);
     --p-stepper-separator-active-background: white;
     --p-stepper-separator-background: var(--color-secondary);
+    --p-stepper-steppanel-background: var(--color-primary);
+    --swiper-navigation-color: white;
 
   }
+
   @theme
   {
     --color-primary: oklch(0 0 0);
-    --color-primary-opacity: rgba(0,0,0,0.3);
+    --color-primary-opacity: rgba(0, 0, 0, 0.3);
     --color-secondary: #737373;
     --color-third: #2E2F2B;
-    --color-error: #CC0000;
-
+    --color-error: #dc3545;
     --color-white: oklch(1 0 0);
   }
+
+
+
+  .p-steppanel .p-stepper-separator {
+    @apply hidden;
+  }
+
 
   .overlay {
     @apply fixed top-0 left-0 w-screen h-screen bg-primary/60 flex justify-center items-center z-[2];
   }
 
-  .p-inputnumber-input
-  {
+  .p-inputnumber-input {
     @apply bg-third  border-none text-white  outline-secondary
   }
 
@@ -40,8 +43,7 @@
     @apply bg-primary border-secondary border-2 p-5 max-w-screen overflow-hidden max-h-screen ;
   }
 
-  .p-step-title
-  {
+  .p-step-title {
     @apply text-secondary;
   }
 
@@ -50,18 +52,15 @@
   }
 
 
-.p-step-active .p-step-number
-{
-  @apply  text-white bg-third
-}
-
-  .p-step-active .p-step-title
-  {
-    @apply  text-white border-b-white border-b-1
+  .p-step-active .p-step-number {
+    @apply text-white bg-third
   }
 
-  body
-  {
+  .p-step-active .p-step-title {
+    @apply text-white border-b-white border-b-1
+  }
+
+  body {
     @apply text-white bg-primary w-screen h-screen m-0 p-0;
   }
 

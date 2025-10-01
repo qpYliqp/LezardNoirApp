@@ -15,11 +15,10 @@ public interface BookRepository extends CrudRepository<Book, Long>, JpaSpecifica
 
     List<Book> findAllByTitleStartingWithIgnoreCase(String letter);
 
-    @Query(value = "SELECT DISTINCT LEFT(b.title, 1) AS letter " +
-            "FROM book b " +
-            "WHERE b.title IS NOT NULL AND b.title != '' " +
-            "ORDER BY letter ASC",
-            nativeQuery = true)
+    @Query("SELECT DISTINCT UPPER(SUBSTRING(b.title, 1, 1)) " +
+            "FROM Book b " +
+            "WHERE b.title IS NOT NULL " +
+            "ORDER BY UPPER(SUBSTRING(b.title, 1, 1)) ASC")
     List<String> findAllAvailableLetters();
 
 

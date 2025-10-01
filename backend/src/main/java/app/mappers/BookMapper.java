@@ -1,6 +1,7 @@
 package app.mappers;
 
 import app.dto.BookDTO;
+import app.dto.BookUpdateDTO;
 import app.models.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -14,5 +15,9 @@ public interface BookMapper {
     BookDTO toDTO(Book book);
 
     Book toEntity(BookDTO dto);
+
+    BookUpdateDTO toUpdateDTO(Book book);
+
+    Book fromupdateDTOtoEntity(BookUpdateDTO dto);
 
 }

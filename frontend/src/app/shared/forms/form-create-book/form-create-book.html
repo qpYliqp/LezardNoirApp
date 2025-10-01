@@ -1,122 +1,53 @@
-
-    <div class="overlay">
-      <div [formGroup]="bookForm" class="modal flex flex-col w-200 h-150 bg-white">
-
-        <div class="flex flex-row justify-between items-baseline md:text-xl md:p-4 p-1 border-b">
-          <p>Créer un livre</p>
-          <button pButton class="hover:bg-transparent border-none">
-            <i class="y text-md lg:text-2xl pi pi-times text-secondary"></i>
-          </button>
-        </div>
-
-        <div class="flex-40 py-5 overflow-auto">
-          <p-stepper [value]="currentStep" [linear]="true">
-            <p-step-list class="">
-              <p-step [value]="1">Détails</p-step>
-              <p-step [value]="2">Marketing</p-step>
-              <p-step [value]="3">Header II</p-step>
-            </p-step-list>
-
-            <p-step-panel [value]="1">
-              <ng-template #content>
-                <div class=" pt-5 h-full" [formGroupName]="'step1'">
-                  <div class="flex md:flex-row items-center flex-col">
-                    <div class="flex flex-col justify-center flex-2 gap-10">
-
-                      <div class="flex md:flex-row flex-col items-center gap-5">
-                        <p-floatlabel >
-                          <input formControlName="title"
-                                 class="bg-third w-50 text-white border-none outline-secondary" pInputText name="title" id="title" autocomplete="off" />
-                          <label  [class]="showError('step1.title')">Titre</label>
-                        </p-floatlabel>
-                        <p-floatlabel >
-                          <input formControlName="isbn"  class="bg-third w-50 text-white border-none outline-secondary" pInputText name="isbn" id="isbn"  autocomplete="off" />
-                          <label [class]="showError('step1.isbn')" for="isbn">ISBN</label>
-                        </p-floatlabel>
-                      </div>
-
-                      <div class="flex md:flex-row flex-col items gap-5">
-                        <p-floatlabel  >
-                          <p-inputNumber formControlName="price" inputStyleClass="w-50" mode="currency" currency="EUR" [minFractionDigits]="2" name="price" id="price" />
-                          <label [class]="showError('step1.price')" for="price">Prix</label>
-                        </p-floatlabel>
-                        <p-floatlabel  >
-                          <p-inputNumber formControlName="pages" inputStyleClass="w-50" [minFractionDigits]="0"   name="pages" id="pages" />
-                          <label [class]="showError('step1.pages')" for="pages">Pages</label>
-                        </p-floatlabel>
-                      </div>
-
-                      <div class="flex md:flex-row flex-col items gap-5">
-                        <p-floatlabel  >
-                          <p-datePicker
-                            formControlName="date"
-                            [selectionMode]="'single'"
-                            [dateFormat]="'dd/mm/yy'"
-                            name="date"
-                            id="date"
-                            class="bg-third text-white border-none outline-secondary max-w-50"
-                            inputStyleClass="bg-third w-50 text-white border-none outline-secondary"
-                            appendTo="body"/>
-                          <label [class]="showError('step1.date')" for="date">Date de sortie</label>
-                        </p-floatlabel>
-                        <p-floatlabel  >
-                          <input formControlName="nuart" class="bg-third w-50 text-white border-none outline-secondary" pInputText name="nuart" id="nuart" />
-                          <label [class]="showError('step1.nuart')" for="nuart">Nuart</label>
-                        </p-floatlabel>
-                      </div>
-
-                    </div>
-                    <app-image-upload class="self-stretch flex-1 overflow-hidden" (fileSelected)="onImageSelected($event)"></app-image-upload>
-
-                  </div>
-                </div>
-              </ng-template>
-            </p-step-panel>
-
-            <p-step-panel [value]="2">
-              <ng-template #content>
-                <div class=" pt-5 h-full flex flex-col justify-center flex-2 gap-10" [formGroupName]="'step2'">
-
-                  <p-floatlabel >
-                    <textarea formControlName="summary" pTextarea
-                              class="bg-third self-stretch border-none outline-secondary text-white w-full" id="on_label"  name="summary" id="summary" autocomplete="off" style="resize: none"></textarea>
-                    <label  [class]="showError('step2.summary')">Résumé</label>
-                  </p-floatlabel>
-                  <p-floatlabel >
-                    <textarea formControlName="hook" pTextarea
-                              class="bg-third self-stretch border-none outline-secondary text-white w-full" id="on_label"  name="hook" id="hook" autocomplete="off" style="resize: none"></textarea>
-                    <label  [class]="showError('step2.hook')">Accroche</label>
-                  </p-floatlabel>
-
-                  <p-floatlabel >
-                    <textarea formControlName="marketing" pTextarea
-                              class="bg-third self-stretch border-none outline-secondary text-white w-full" id="on_label"  name="marketing" id="hook" autocomplete="off" style="resize: none"></textarea>
-                    <label  [class]="showError('step2.marketing')">Argument de vente</label>
-                  </p-floatlabel>
-
-                  </div>
-              </ng-template>
-            </p-step-panel>
-          </p-stepper>
-        </div>
-
-        <div class=" flex-1 mt-auto flex" [class]="currentStep > 1 ? 'justify-between' : 'justify-end'">
-          @if(currentStep > 1)
-          {
-          <button pButton
-                  class="bg-third hover:bg-secondary focus:bg-third border-none"
-                  (click)="goToStep(currentStep-1)">
-            <i class="y pi pi-arrow-left text-white"></i>
-            Retour
-          </button>
-          }
-          <button pButton
-                  class="bg-third hover:bg-secondary focus:bg-third border-none"
-                  (click)="goToStep(currentStep+1)">
-            Suivant
-            <i class="y pi pi-arrow-right text-white"></i>
-          </button>
-        </div>
-
-      </div>
+<div class="overlay">
+  <div class="modal flex flex-col w-200 h-150  transition duration-300">
+    <div class="flex flex-row justify-between items-baseline md:text-xl md:p-4 p-1 border-b transform transition-all duration-700">
+      <p>Créer un livre</p>
+      <button
+        (click)="closeBookForm()"
+        class="hover:bg-transparent border-none"
+        pButton>
+        <i class="y text-md lg:text-2xl pi pi-times text-secondary"></i>
+      </button>
     </div>
+    <div class="flex-40 py-5 overflow-auto">
+      <p-stepper
+        [linear]="true"
+        [value]="currentStep">
+        <p-step-list class="">
+          <p-step [value]="0">Détails</p-step>
+          <p-step [value]="1">Marketing</p-step>
+        </p-step-list>
+        <p-step-panel [value]="0">
+          <ng-template #content>
+            <app-form-book-details></app-form-book-details>
+          </ng-template>
+        </p-step-panel>
+        <p-step-panel [value]="1">
+          <ng-template #content>
+            <app-form-book-marketing></app-form-book-marketing>
+          </ng-template>
+        </p-step-panel>
+      </p-stepper>
+    </div>
+    <div
+      [class]="currentStep > 0 ? 'justify-between' : 'justify-end'"
+      class=" flex-1 mt-auto flex">
+      @if (currentStep > 0) {
+        <button
+          pButton
+          class="bg-third hover:bg-secondary focus:bg-third border-none"
+          (click)="previousStep()">
+          <i class="y pi pi-arrow-left text-white"></i>
+          Retour
+        </button>
+      }
+      <button
+        (click)="nextStep()"
+        class="bg-third hover:bg-secondary focus:bg-third border-none"
+        pButton>
+        Suivant
+        <i class="y pi pi-arrow-right text-white"></i>
+      </button>
+    </div>
+  </div>
+</div>

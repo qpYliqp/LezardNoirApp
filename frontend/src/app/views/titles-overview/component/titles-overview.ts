@@ -1,26 +1,8 @@
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  ElementRef,
-  inject,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ViewEncapsulation,
-  AfterViewInit, HostListener
-} from '@angular/core';
-import {Book} from '../../../models/Book';
+import {Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, ViewEncapsulation} from '@angular/core';
 import {TitlesOverviewService} from '../service/titles-overview-service';
-import {AsyncPipe} from '@angular/common';
 import {CarouselModule} from 'primeng/carousel';
-import {Card} from 'primeng/card';
 // import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
 import {Swiper} from '../../../shared/swiper/swiper';
-import {Button} from 'primeng/button';
-import {FloatLabel} from 'primeng/floatlabel';
-import {InputText} from 'primeng/inputtext';
-import {DatePicker} from 'primeng/datepicker';
 import {FormCreateBook} from '../../../shared/forms/form-create-book/form-create-book';
 
 @Component({
@@ -40,29 +22,32 @@ import {FormCreateBook} from '../../../shared/forms/form-create-book/form-create
 export class TitlesOverview {
 
   bookService = inject(TitlesOverviewService);
-  carousels: { letter: string; books: Book[]; showNavigation?: boolean, activeIndex? : number }[] = [];
-  isCreatingBook: boolean = false;
+  carousels = computed(() => {
+    console.log("computed carousels")
+    const booksMap = this.bookService.booksGrouped();
+    return Array.from(booksMap.entries()).map(([letter, books]) => ({
+      letter,
+      books
+    }));
+  });
+  isCreating: boolean = false;
 
-  isCreating : boolean = true;
-
-  constructor() {}
-
-  ngOnInit() {
-    this.bookService.getAllBooksGroupedByLetter().subscribe({
-      next: (map) => {
-        this.carousels = Array.from(map.entries()).map(([letter, books]) => ({
-          letter,
-          books
-        }));
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des livres groupés par lettre:', err.message);
-      }
-    });
+  constructor() {
   }
 
-  public createBook()
-  {
+  ngOnInit() {
+
+  }
+
+  openBookForm() {
+    this.isCreating = true;
+  }
+
+  onCloseBookForm() {
+    this.isCreating = false;
+  }
+
+  public createBook() {
     console.log("hehe")
   }
 

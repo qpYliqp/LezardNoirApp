@@ -3,5 +3,5 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-EXPOSE 3000
-CMD ["npm", "start", "--", "--port", "3000", "--host", "0.0.0.0"]
+EXPOSE 4200
+CMD ["npm", "start", "--", "--port", "4200", "--host", "0.0.0.0"]
