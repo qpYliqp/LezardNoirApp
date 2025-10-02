@@ -14,18 +14,10 @@ import app.repositories.BookRepository;
 import app.repositories.StatusRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class BookService {
@@ -36,10 +28,13 @@ public class BookService {
 
     private final StatusRepository statusRepository;
 
-    public BookService(final BookRepository bookRepository, final AuthorRepository authorRepository, final StatusRepository statusRepository) {
+    private final MinioService minioService;
+
+    public BookService(final BookRepository bookRepository, final AuthorRepository authorRepository, final StatusRepository statusRepository, final MinioService minioService) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.statusRepository = statusRepository;
+        this.minioService = minioService;
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +46,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, List<BookDTO>> getAllBooksGroupedByLetter() {
+    public Map<String, List<BookDTO>> getAllBooksGroupedByLetter() throws Exception {
         Map<String, List<BookDTO>> groupedBooks = new LinkedHashMap<>();
 
         List<String> letters = this.bookRepository.findAllAvailableLetters();
@@ -60,7 +55,7 @@ public class BookService {
             List<BookDTO> books = this.bookRepository
                     .findAllByTitleStartingWithIgnoreCase(letter)
                     .stream()
-                    .map(BookMapper.INSTANCE::toDTO)
+                    .map(this::mapToBookDTOWithUrl)
                     .toList();
             groupedBooks.put(letter, books);
         });
@@ -93,41 +88,35 @@ public class BookService {
     }
 
     @Transactional
-    public BookDTO updateGlobalStatus(Long bookId, Long statusId) {
+    public BookDTO updateGlobalStatus(Long bookId, Long statusId) throws Exception {
         Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
         Status status = this.statusRepository.findById(statusId)
                 .orElseThrow(() -> new StatusException("Author not found with authorId: " + statusId));
         book.setGlobalStatus(status);
-        return BookMapper.INSTANCE.toDTO(book);
+        return this.mapToBookDTOWithUrl(book);
     }
 
 
     @Transactional
-    public BookDTO createBook(BookUpdateDTO dto) throws IOException {
+    public BookDTO createBook(BookUpdateDTO dto) throws Exception {
         Book book = BookMapper.INSTANCE.fromupdateDTOtoEntity(dto);
-
-        // Sauvegarde du fichier si présent
         if (dto.getCoverFile() != null && !dto.getCoverFile().isEmpty()) {
-            String filename = StringUtils.cleanPath(Objects.requireNonNull(dto.getCoverFile().getOriginalFilename()));
-            Path uploadPath = Paths.get("uploads/");
 
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            try (InputStream inputStream = dto.getCoverFile().getInputStream()) {
-                Path filePath = uploadPath.resolve(filename);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            // Stocker le nom du fichier dans l'entité
-            book.setCoverFileName(filename);
+            String newCoverFileName = this.minioService.updateCover(book.getCoverFileName(), dto.getCoverFile());
+            book.setCoverFileName(newCoverFileName);
         }
-
-        // Sauvegarder le livre dans tous les cas
         bookRepository.save(book);
+        return mapToBookDTOWithUrl(book);
+    }
 
-        return BookMapper.INSTANCE.toDTO(book);
+    public BookDTO mapToBookDTOWithUrl(Book book) {
+        BookDTO dto = BookMapper.INSTANCE.toDTO(book);
+        try {
+            dto.setCoverUrl(this.minioService.getCover(book.getCoverFileName()));
+            return dto;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

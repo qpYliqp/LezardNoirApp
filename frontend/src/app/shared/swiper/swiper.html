@@ -9,7 +9,7 @@
       "480":  { "slidesPerView": 2, "slidesPerGroup": 5, "spaceBetween": 15 },
       "768":  { "slidesPerView": 4, "slidesPerGroup": 5, "spaceBetween": 15 },
       "1024": { "slidesPerView": 6, "slidesPerGroup": 5, "spaceBetween": 20 },
-      "1280": { "slidesPerView": 9, "slidesPerGroup": 5, "spaceBetween": 20 }
+      "1280": { "slidesPerView": 9, "slidesPerGroup": 5, "spaceBetween": 30 }
     }'
     class="swiper-custom"
     init="false"
@@ -22,11 +22,11 @@
       <swiper-slide>
         <div class=" bg-third h-full block">
           <div class="sm:h-40 h-20 transform transition-transform duration-300 ease-in-out hover:scale-105">
-            @if (book.coverFileName != null) {
+            @if (book.coverUrl != null) {
               <div class="group h-full overflow-hidden flex items-center justify-center">
                 <img
                   loading="lazy"
-                  src="{{book.coverFileName}}"
+                  src="{{book.coverUrl}}"
                   class="w-full h-full object-cover">
                 <div class="hidden group-hover:flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
                   <p class="md:text-sm text-xs bg-primary p-2 rounded break-words whitespace-normal text-center max-w-[90%]">
