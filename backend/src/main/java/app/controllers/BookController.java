@@ -7,7 +7,6 @@ import app.dto.StatusDTO;
 import app.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class BookController {
     }
 
     @GetMapping("/letter")
-    public Map<String, List<BookDTO>> getAllBooksGroupedByLetter() {
+    public Map<String, List<BookDTO>> getAllBooksGroupedByLetter() throws Exception {
         return this.bookService.getAllBooksGroupedByLetter();
     }
 
@@ -48,12 +47,12 @@ public class BookController {
     }
 
     @PostMapping("{bookId}/update/status")
-    public BookDTO updateGlobalStatus(@PathVariable Long bookId, @RequestBody StatusDTO status) {
+    public BookDTO updateGlobalStatus(@PathVariable Long bookId, @RequestBody StatusDTO status) throws Exception {
         return this.bookService.updateGlobalStatus(bookId, status.getId());
     }
 
     @PostMapping()
-    public BookDTO createBook(@ModelAttribute BookUpdateDTO book) throws IOException {
+    public BookDTO createBook(@ModelAttribute BookUpdateDTO book) throws Exception {
         return bookService.createBook(book);
     }
 
