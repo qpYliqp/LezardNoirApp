@@ -51,8 +51,10 @@ export class TitlesOverviewService {
       map(response => {
         const result = new Map<string, Book[]>();
         Object.entries(response).forEach(([letter, books]) => {
+
           result.set(letter, books.map(b => new Book(b)));
         });
+        console.log(result)
         return result;
       }),
       catchError(err => {
