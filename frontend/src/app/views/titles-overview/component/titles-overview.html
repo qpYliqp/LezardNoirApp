@@ -19,11 +19,6 @@
         placeholder="Search"
         type="text"/>
     </p-iconfield>
-    <button
-      (click)="filter()"
-      class="text-xs md:text-sm bg-third px-3 py-2 hover:cursor-pointer hover:bg-secondary transition">
-      Filtrer
-    </button>
   </div>
   @if (!isFilterMode()) {
     <div class="flex-1 overflow-y-auto px-5 pt-10 border-secondary view-container">
@@ -42,22 +37,10 @@
       }
 
       <div
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-5"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-4 p-5"
         [class.opacity-50]="bookService.loading()">
         @for (book of filteredBooks(); track book.id) {
-          <div class="grid-item bg-third hover:bg-secondary transition-colors rounded overflow-hidden cursor-pointer">
-            @if (book.coverUrl !== null) {
-              <img
-                [src]="book.coverUrl"
-                [alt]="book.title"
-                class="w-full h-48 object-cover ">
-            } @else {
-              <div class="w-full h-48 bg-third flex items-center justify-center"></div>
-            }
-            <div class="p-2">
-              <p class="text-white text-sm truncate">{{ book.title }}</p>
-            </div>
-          </div>
+          <app-little-book-card [book]="book"></app-little-book-card>
         }
       </div>
 

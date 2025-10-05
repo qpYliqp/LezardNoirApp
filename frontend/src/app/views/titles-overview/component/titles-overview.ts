@@ -8,6 +8,7 @@ import {InputText} from 'primeng/inputtext';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {BookFilter} from '../BookFilter';
+import {LittleBookCard} from '../../../shared/cards/little-book-card/little-book-card';
 
 @Component({
   selector: 'app-titles-overview',
@@ -19,6 +20,7 @@ import {BookFilter} from '../BookFilter';
     InputText,
     IconField,
     InputIcon,
+    LittleBookCard,
 
   ],
   providers: [TitlesOverviewService],
