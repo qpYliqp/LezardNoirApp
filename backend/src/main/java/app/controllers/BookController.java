@@ -22,8 +22,8 @@ public class BookController {
     }
 
     @GetMapping
-    public List<BookDTO> getAllBooks() {
-        return this.bookService.getAllBooks();
+    public List<BookDTO> getAllBooks(@RequestParam(required = false) String startWithPrefix) {
+        return this.bookService.getAllBooks(startWithPrefix);
     }
 
     @GetMapping("/letter")

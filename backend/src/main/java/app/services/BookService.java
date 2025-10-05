@@ -12,6 +12,7 @@ import app.models.Status;
 import app.repositories.AuthorRepository;
 import app.repositories.BookRepository;
 import app.repositories.StatusRepository;
+import app.repositories.specifications.BookSpecification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +39,10 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookDTO> getAllBooks() {
-        return this.bookRepository.findAll()
+    public List<BookDTO> getAllBooks(String startWithPrefix) {
+        return this.bookRepository.findAll(BookSpecification.startWith(startWithPrefix))
                 .stream()
-                .map(BookMapper.INSTANCE::toDTO)
+                .map(this::mapToBookDTOWithUrl)
                 .toList();
     }
 

@@ -1,61 +1,61 @@
-    package app.models;
+package app.models;
 
-    import jakarta.persistence.*;
-    import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-    import java.util.HashSet;
-    import java.util.Set;
+import java.util.HashSet;
+import java.util.Set;
 
-    @Getter @Setter
-    @Entity
-    public class Book {
+@Getter
+@Setter
+@Entity
+public class Book {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-        private String title;
+    private String title;
 
-        private float price;
+    private float price;
 
-        private int pages;
+    private int pages;
 
-        private String isbn;
+    private String isbn;
 
-        private String nuart;
+    private String nuart;
 
-        private String note;
+    private String note;
 
-        private String summary;
+    private String summary;
 
-        private String hook;
+    private String hook;
 
-        private String marketing;
+    private String marketing;
 
+        
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private Set<Author> authors = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id")
+    private Status globalStatus;
+    @Column(name = "cover_filename")
+    private String coverFileName;
 
-        @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-        @JoinTable(
-                name = "book_author",
-                joinColumns = @JoinColumn(name = "book_id"),
-                inverseJoinColumns = @JoinColumn(name = "author_id")
-        )
-        private Set<Author> authors = new HashSet<>();
-
-        public void addAuthor(Author author) {
-            authors.add(author);
-            author.getBooks().add(this);
-        }
-
-        public void removeAuthor(Author author) {
-            authors.remove(author);
-            author.getBooks().remove(this);
-        }
-
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "status_id")
-        private Status globalStatus;
-
-        @Column(name="cover_filename")
-        private String coverFileName;
-
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.getBooks().add(this);
     }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.getBooks().remove(this);
+    }
+
+}

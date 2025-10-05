@@ -1,10 +1,13 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, input} from '@angular/core';
 import {Book} from '../../models/Book';
 import {Navigation} from 'swiper/modules';
+import {LittleBookCard} from '../cards/little-book-card/little-book-card';
 
 @Component({
   selector: 'app-swiper',
-  imports: [],
+  imports: [
+    LittleBookCard
+  ],
   templateUrl: './swiper.html',
   styleUrl: './swiper.css',
   //Dans mes templates, il est possible que j’utilise des éléments HTML personnalisés que Angular ne connaît pas encore. Ne me génère pas d’erreur pour ça.

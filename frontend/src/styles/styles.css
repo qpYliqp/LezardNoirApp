@@ -11,6 +11,7 @@
     --p-stepper-separator-background: var(--color-secondary);
     --p-stepper-steppanel-background: var(--color-primary);
     --swiper-navigation-color: white;
+    --p-tooltip-background: var(--color-third)
 
   }
 
