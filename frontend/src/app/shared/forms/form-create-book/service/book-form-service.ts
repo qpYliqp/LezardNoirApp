@@ -36,7 +36,7 @@ export class BookFormService {
     this.http.post<Book>(this.apiUrl, formData)
       .subscribe({
         next: (response) => {
-          this.titlesService.addAllBookGroupedByLetter(response)
+          this.titlesService.addBook(response)
         },
         error: (error) => console.error('Erreur:', error)
       });

@@ -1,53 +1,91 @@
 import {Injectable, signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {catchError, map, of} from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {catchError, finalize, map, of} from 'rxjs';
 import {Book} from '../../../models/Book';
 import {apiURL} from '../../../../contants';
+import {BookFilter} from '../BookFilter';
 
 @Injectable()
 export class TitlesOverviewService {
-  private booksGroupedByLetter = signal<Map<string, Book[]>>(new Map());
 
-  readonly booksGrouped = this.booksGroupedByLetter.asReadonly();
-  private apiUrl = apiURL + "books";
+  private allBooksSignal = signal<Book[]>([]);
+  readonly allBooks = this.allBooksSignal.asReadonly();
+
+  private booksGroupedSignal = signal<Map<string, Book[]>>(new Map());
+  readonly booksGrouped = this.booksGroupedSignal.asReadonly();
+
+  private loadingSignal = signal<boolean>(false);
+  readonly loading = this.loadingSignal.asReadonly();
+
+  private readonly apiUrl = `${apiURL}books`;
 
   constructor(private http: HttpClient) {
-    this.loadBooks()
+    this.loadBooksByLetter();
   }
 
-  public addAllBookGroupedByLetter(book: Book) {
-    if (!book || !book.title) {
-      return;
-    }
+  loadAllBooks(filters?: BookFilter): void {
+    const filteredFilters = Object.fromEntries(
+      Object.entries(filters || {}).filter(([_, v]) => v != null)
+    );
 
-    const firstLetter = book.title.charAt(0).toUpperCase();
-    const currentBooks = this.booksGroupedByLetter();
-    const updatedBooks = new Map(currentBooks);
-    const booksForLetter = updatedBooks.get(firstLetter) || [];
-    booksForLetter.push(book);
-    updatedBooks.set(firstLetter, booksForLetter);
-    this.booksGroupedByLetter.set(updatedBooks);
+    const params = new HttpParams({fromObject: filteredFilters as any});
+
+    this.loadingSignal.set(true);
+
+    this.http.get<Book[]>(this.apiUrl, {params}).pipe(
+      map(books => books.map(b => new Book(b))),
+      catchError(err => {
+        console.error('Erreur lors du chargement des livres :', err.message);
+        return of([]);
+      }),
+      finalize(() => {
+        this.loadingSignal.set(false);
+      })
+    ).subscribe(books => this.allBooksSignal.set(books));
   }
 
+  loadBooksByLetter(): void {
+    this.loadingSignal.set(true);
 
-  private loadBooks(): void {
-    this.http.get<{ [key: string]: any[] }>(`${this.apiUrl}/letter`).pipe(
+    this.http.get<Record<string, any[]>>(`${this.apiUrl}/letter`).pipe(
       map(response => {
         const result = new Map<string, Book[]>();
         Object.entries(response).forEach(([letter, books]) => {
-
           result.set(letter, books.map(b => new Book(b)));
         });
-        console.log(result)
         return result;
       }),
       catchError(err => {
-        console.error('Erreur lors du chargement des livres groupés par lettre:', err.message);
-        return of(new Map());
+        console.error('Erreur lors du chargement des livres groupés :', err.message);
+        return of(new Map<string, Book[]>());
+      }),
+      finalize(() => {
+        this.loadingSignal.set(false);
       })
-    ).subscribe(booksMap => {
-      this.booksGroupedByLetter.set(booksMap);
-    });
+    ).subscribe(mapResult => this.booksGroupedSignal.set(mapResult));
+  }
+
+  addBook(book: Book): void {
+    if (!book || !book.title) return;
+
+    this.addToAllBook(book);
+    this.addToBookGroupedByLetter(book);
+  }
+
+  private addToAllBook(book: Book): void {
+    const updatedList = [...this.allBooksSignal(), book];
+    this.allBooksSignal.set(updatedList);
+  }
+
+  private addToBookGroupedByLetter(book: Book): void {
+    const firstLetter = book.title.charAt(0).toUpperCase();
+    const currentGroups = this.booksGroupedSignal();
+    const updatedGroups = new Map(currentGroups);
+
+    const listForLetter = updatedGroups.get(firstLetter) || [];
+    updatedGroups.set(firstLetter, [...listForLetter, book]);
+
+    this.booksGroupedSignal.set(updatedGroups);
   }
 
 }

@@ -2,22 +2,70 @@
   <app-form-create-book (closeModal)="onCloseBookForm()"></app-form-create-book>
 }
 
-<div class="flex flex-col h-full ">
+<div class="flex flex-col h-full">
   <div class="sm:flex sm:items-center sm:justify-between sm:p-5 sm:border-b-2 sm:border-secondary hidden">
     <button
       (click)="openBookForm()"
       class="text-xs md:text-sm bg-third px-3 py-2 hover:cursor-pointer hover:bg-secondary transition">
       Nouveau livre
     </button>
+    <p-iconfield>
+      <p-inputicon class="pi text-secondary pi-search"/>
+      <input
+        (ngModelChange)="onSearching($event)"
+        [ngModel]="searchValue"
+        class="border-none text-white placeholder-secondary bg-third"
+        pInputText
+        placeholder="Search"
+        type="text"/>
+    </p-iconfield>
+    <button
+      (click)="filter()"
+      class="text-xs md:text-sm bg-third px-3 py-2 hover:cursor-pointer hover:bg-secondary transition">
+      Filtrer
+    </button>
   </div>
-  <div class="flex-1 overflow-y-auto px-5 pt-10 border-secondary">
-    @for (carousel of carousels(); track carousel.letter) {
-      <div class="flex flex-col mb-10">
-        <p class="text-2xl mb-2">{{ carousel.letter }}</p>
-        <app-swiper
-          [books]="carousel.books"
-          [id]="carousel.letter"></app-swiper>
+  @if (!isFilterMode()) {
+    <div class="flex-1 overflow-y-auto px-5 pt-10 border-secondary view-container">
+      @for (carousel of carousels(); track carousel.letter) {
+        <div class="flex flex-col mb-10">
+          <p class="text-2xl mb-2">{{ carousel.letter }}</p>
+          <app-swiper
+            [books]="carousel.books"
+            [id]="carousel.letter"></app-swiper>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="flex-1 overflow-y-auto view-container relative">
+      @if (bookService.loading()) {
+      }
+
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-5"
+        [class.opacity-50]="bookService.loading()">
+        @for (book of filteredBooks(); track book.id) {
+          <div class="grid-item bg-third hover:bg-secondary transition-colors rounded overflow-hidden cursor-pointer">
+            @if (book.coverUrl !== null) {
+              <img
+                [src]="book.coverUrl"
+                [alt]="book.title"
+                class="w-full h-48 object-cover ">
+            } @else {
+              <div class="w-full h-48 bg-third flex items-center justify-center"></div>
+            }
+            <div class="p-2">
+              <p class="text-white text-sm truncate">{{ book.title }}</p>
+            </div>
+          </div>
+        }
       </div>
-    }
-  </div>
+
+      @if (filteredBooks().length === 0 && !bookService.loading()) {
+        <div class="flex items-center justify-center">
+          <p class="text-secondary text-lg">Aucun livre trouvé</p>
+        </div>
+      }
+    </div>
+  }
 </div>

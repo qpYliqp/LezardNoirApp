@@ -1,47 +1,44 @@
-<div class="flex flex-row items-center justify-center">
-  <button class="swiper-button-prev-{{id()}} hover:cursor-pointer">
+<div
+  class="flex flex-row items-center justify-center">
+  <button
+    class="swiper-button-prev-{{id()}} hover:cursor-pointer">
     <i class="pi pi-angle-left"></i>
   </button>
   <swiper-container
     [id]="'swiper-' + id()"
     breakpoints='{
-      "0":    { "slidesPerView": 2, "slidesPerGroup": 5, "spaceBetween": 10 },
-      "480":  { "slidesPerView": 2, "slidesPerGroup": 5, "spaceBetween": 15 },
-      "768":  { "slidesPerView": 4, "slidesPerGroup": 5, "spaceBetween": 15 },
+      "0":    { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 10 },
+      "480":  { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 12 },
+      "768":  { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 },
       "1024": { "slidesPerView": 6, "slidesPerGroup": 5, "spaceBetween": 20 },
-      "1280": { "slidesPerView": 9, "slidesPerGroup": 5, "spaceBetween": 30 }
+      "1280": { "slidesPerView": 10, "slidesPerGroup": 5, "spaceBetween": 24 }
     }'
-    class="swiper-custom"
+    class="swiper-custom w-full"
     init="false"
     loop="false"
     modules="modules"
     slides-per-group="5"
-    slides-per-view="9"
+    slides-per-view="10"
     space-between="15">
     @for (book of books(); track book.id) {
       <swiper-slide>
-        <div class=" bg-third h-full block">
-          <div class="sm:h-40 h-20 transform transition-transform duration-300 ease-in-out hover:scale-105">
-            @if (book.coverUrl != null) {
-              <div class="group h-full overflow-hidden flex items-center justify-center">
-                <img
-                  loading="lazy"
-                  src="{{book.coverUrl}}"
-                  class="w-full h-full object-cover">
-                <div class="hidden group-hover:flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
-                  <p class="md:text-sm text-xs bg-primary p-2 rounded break-words whitespace-normal text-center max-w-[90%]">
-                    {{ book.title }} </p>
-                </div>
-              </div>
-            } @else {
-              <div class="group overflow-hidden flex items-center justify-center">
-                <div class="flex hover:cursor-pointer absolute inset-0 items-center justify-center bg-primary-opacity">
-                  <p class="md:text-sm text-xs p-2 rounded break-words whitespace-normal text-center max-w-[90%]">
-                    {{ book.title }} </p>
-                </div>
-              </div>
-            }
-          </div>
+        <div class="group relative bg-third border-third border-2 overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 h-32 sm:h-48 lg:h-40">
+          @if (book.coverUrl != null) {
+            <img
+              loading="lazy"
+              [src]="book.coverUrl"
+              [alt]="book.title"
+              class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 sm:p-4 cursor-pointer">
+              <p class="text-white text-xs sm:text-sm font-medium line-clamp-2 sm:line-clamp-3">
+                {{ book.title }} </p>
+            </div>
+          } @else {
+            <div class="flex items-center justify-center h-full bg-gradient-to-br from-primary/20 to-primary/5 p-3 sm:p-4 cursor-pointer group-hover:from-primary/30 group-hover:to-primary/10 transition-colors duration-300">
+              <p class="text-center text-xs sm:text-sm font-medium line-clamp-3 sm:line-clamp-4">
+                {{ book.title }} </p>
+            </div>
+          }
         </div>
       </swiper-slide>
     }
