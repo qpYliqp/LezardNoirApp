@@ -1,1 +1,37 @@
-<p>Lol</p>
+@if (book() !== null) {
+				<div class="w-full h-full p-10 overflow-y-auto">
+								<div class="w-full flex justify-end mb-4">
+												<button>
+																<i class="pi pi-times text-2xl text-third hover:text-secondary"></i>
+												</button>
+								</div>
+								<div class="w-full flex flex-row gap-4">
+												@if (book()!.coverUrl !== null) {
+																<img
+																								src="{{book()!.coverUrl}}"
+																								class="lg:w-100 lg:h-150 w-50 h-70 object-cover">
+												} @else {
+																<p>Couverture non disponible</p>
+												}
+												<div class="flex-1 flex flex-col gap-5 p-4 self-stretch border-r-secondary border-r-1">
+																<p class="text-3xl ">{{ book()?.title }}</p>
+																<div class="flex flex-col gap-2   ">
+																				<p class="text-secondary text-md"><span class="font-bold">Auteur :</span> nom</p>
+																				<p class="text-secondary text-md"><span class="font-bold">Trad :</span> nom</p>
+																</div>
+																<div class="flex flex-col gap-2">
+																				<p class="text-white text-md"><span class="font-bold">ISBN :</span> {{ book()?.isbn }}</p>
+																				<p class="text-white text-md"><span class="font-bold">NUART :</span> {{ book()?.nuart }}</p>
+																</div>
+																<div class="flex flex-col gap-2">
+																				<p class="text-white text-md"><span class="font-bold">PRIX :</span> {{ book()?.price }}</p>
+																				<p class="text-white text-md"><span class="font-bold">PAGES :</span> {{ book()?.pages }}</p>
+																				<p class="text-white text-md"><span class="font-bold">PAGES :</span> {{ book()?.pages }}</p>
+																				<p class="text-white text-md"><span class="font-bold">PAGES :</span> {{ book()?.pages }}</p>
+																				<p class="text-white text-md"><span class="font-bold">PAGES :</span> {{ book()?.pages }}</p>
+																				<p class="text-white text-md"><span class="font-bold">PAGES :</span> {{ book()?.pages }}</p>
+																</div>
+												</div>
+								</div>
+				</div>
+}

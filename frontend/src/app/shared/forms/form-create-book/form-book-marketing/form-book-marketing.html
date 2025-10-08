@@ -1,43 +1,53 @@
 <form
   #formBookMarketing="ngForm"
-  class=" pt-5 px-5 h-full flex">
-  <div class=" pt-5 h-full flex flex-col justify-center flex-2 gap-10">
-    <p-floatlabel>
+  class="pt-8 px-8 h-full flex">
+  <div class="h-full flex flex-col justify-center flex-2 gap-7 w-full max-w-4xl mx-auto">
+    <p-floatlabel class="transition-all duration-300 flex-1 min-h-0">
       <textarea
         #summary="ngModel"
         [(ngModel)]="bookMarketing.summary"
         autocomplete="off"
-        class="bg-third self-stretch border-none outline-secondary h-20 text-white w-full"
+        class="bg-third text-xs h-20 self-stretch border-none outline-secondary  text-white w-full  p-4"
         name="summary"
         pTextarea
         style="resize: none">
       </textarea>
-      <label [class]="summary.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Résumé</label>
+      <label
+        [class]="summary.invalid && hasSubmited ? 'text-error font-medium' : 'text-secondary font-medium'">
+        Résumé
+      </label>
     </p-floatlabel>
-    <p-floatlabel>
-        <textarea
-          #hook="ngModel"
-          [(ngModel)]="bookMarketing.hook"
-          autocomplete="off"
-          class="bg-third self-stretch border-none outline-secondary text-white h-20 w-full"
-          name="hook"
-          pTextarea
-          required
-          style="resize: none"></textarea>
-      <label [class]="hook.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Accroche</label>
+    <p-floatlabel class="transition-all duration-300 flex-1 min-h-0">
+      <textarea
+        #hook="ngModel"
+        [(ngModel)]="bookMarketing.hook"
+        autocomplete="off"
+        class="bg-third text-xs h-20 self-stretch border-none outline-secondary text-white  w-full  p-2"
+        name="hook"
+        pTextarea
+        required
+        style="resize: none">
+      </textarea>
+      <label
+        [class]="hook.invalid && hasSubmited ? 'text-error font-medium' : 'text-secondary font-medium'">
+        Accroche
+      </label>
     </p-floatlabel>
     <p-floatlabel>
       <textarea
         #marketing="ngModel"
         [(ngModel)]="bookMarketing.marketing"
         autocomplete="off"
-        class="bg-third self-stretch border-none outline-secondary text-white  h-20 w-full"
+        class="bg-third text-xs h-20 self-stretch border-none outline-secondary text-white  w-full  p-4"
         name="marketing"
         pTextarea
         required
         style="resize: none">
       </textarea>
-      <label [class]="marketing.invalid && hasSubmited ? 'text-error' : 'text-secondary'">Argument de vente</label>
+      <label
+        [class]="marketing.invalid && hasSubmited ? 'text-error font-medium' : 'text-secondary font-medium'">
+        Argument de vente
+      </label>
     </p-floatlabel>
   </div>
 </form>

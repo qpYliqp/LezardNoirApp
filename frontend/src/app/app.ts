@@ -1,15 +1,22 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, inject, signal} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 import {Sidebar} from './component/sidebar/sidebar';
-import {provideStore} from '@ngxs/store';
+import {Toast} from 'primeng/toast';
+import {ToastService} from './services/toast-service';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidebar],
+  imports: [RouterOutlet, Sidebar, Toast],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
+  toastService = inject(ToastService);
+
   protected readonly title = signal('frontend');
+
+  ngOnInit() {
+    this.toastService.showSuccess("oui", "tg")
+  }
 }

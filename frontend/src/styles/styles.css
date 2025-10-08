@@ -11,8 +11,10 @@
     --p-stepper-separator-background: var(--color-secondary);
     --p-stepper-steppanel-background: var(--color-primary);
     --swiper-navigation-color: white;
-    --p-tooltip-background: var(--color-third)
-
+    --p-tooltip-background: var(--color-third);
+    --p-multiselect-background: var(--color-third);
+    --p-checkbox-background: var(--color-third);
+    --p-checkbox-checked-background: var(--color-secondary);
   }
 
   @theme
@@ -25,10 +27,46 @@
     --color-white: oklch(1 0 0);
   }
 
-
+  .p-toast {
+    z-index: 9999 !important;
+  }
 
   .p-steppanel .p-stepper-separator {
     @apply hidden;
+  }
+
+  .p-multiselect-overlay {
+    @apply bg-third text-white items-center;
+  }
+
+  .p-multiselect-label-container {
+    @apply outline-none border-none text-white;
+  }
+
+  .p-multiselect-label {
+    @apply text-secondary;
+  }
+
+  .p-multiselect-dropdown {
+    @apply text-secondary;
+  }
+
+  .p-multiselect-filter {
+    @apply bg-third border-secondary outline-none text-white;
+
+  }
+
+  .p-multiselect-filter-container {
+    @apply text-white;
+
+  }
+
+  .p-checkbox-box {
+    @apply border-secondary outline-none
+  }
+
+  .p-multiselect-option {
+    @apply bg-third text-white border-secondary border-b-1;
   }
 
 

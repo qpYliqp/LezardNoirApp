@@ -13,9 +13,10 @@
       <p-stepper
         [linear]="true"
         [value]="currentStep">
-        <p-step-list class="">
+        <p-step-list>
           <p-step [value]="0">Détails</p-step>
           <p-step [value]="1">Marketing</p-step>
+          <p-step [value]="2">Auteurs</p-step>
         </p-step-list>
         <p-step-panel [value]="0">
           <ng-template #content>
@@ -25,6 +26,11 @@
         <p-step-panel [value]="1">
           <ng-template #content>
             <app-form-book-marketing></app-form-book-marketing>
+          </ng-template>
+        </p-step-panel>
+        <p-step-panel [value]="2">
+          <ng-template #content>
+            <app-form-book-authors></app-form-book-authors>
           </ng-template>
         </p-step-panel>
       </p-stepper>

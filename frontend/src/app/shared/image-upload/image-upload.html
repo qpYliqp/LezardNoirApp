@@ -1,22 +1,21 @@
 <div class="h-80 flex-1 w-full flex flex-col flex-1">
   <div
-    class="flex h-full max-h-full flex-col items-center justify-center border-2 border-dashed border-third rounded-xl p-4 text-third hover:border-secondary hover:text-secondary transition cursor-pointer overflow-hidden"
     (click)="fileInput.click()"
-    (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
+    (dragover)="onDragOver($event)"
     (drop)="onDrop($event)"
     [class.bg-primary-opacity]="isDragging"
-  >
+    class="flex h-full max-h-full flex-col items-center justify-center border-2  border-dashed border-third rounded-xl p-4 text-third hover:border-secondary hover:text-secondary transition cursor-pointer overflow-hidden">
     @if (preview) {
       <div class="flex flex-col items-center justify-center w-full h-full overflow-hidden">
         <img
           [src]="preview"
           alt="Aperçu"
-          class="max-w-full h-full w-full object-contain max-h-full rounded-xl shadow-lg"
-        />
-        <p class="text-sm text-gray-500 truncate w-full text-center mt-2" style="height: 20px;">
-          {{ selectedFile?.name }}
-        </p>
+          class="max-w-full h-full w-full object-contain max-h-full rounded-xl shadow-lg"/>
+        <p
+          class="text-sm text-gray-500 truncate w-full text-center mt-2"
+          style="height: 20px;">
+          {{ selectedFile?.name }} </p>
       </div>
     } @else {
       <div class="flex flex-col  items-center justify-center w-full h-full">
@@ -25,12 +24,9 @@
       </div>
     }
   </div>
-</div>
-
-<input
-  type="file"
-  accept="image/*"
-  class="hidden"
+</div><input
   #fileInput
   (change)="onFileSelected($event)"
-/>
+  accept="image/*"
+  class="hidden"
+  type="file"/>

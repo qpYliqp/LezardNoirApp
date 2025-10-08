@@ -1,21 +1,42 @@
-import {Component, inject} from '@angular/core';
-import {Book} from '../../models/Book';
-import {ActivatedRoute} from '@angular/router';
+import {Component, effect, inject} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BookViewService} from './service/book-view-service';
+import {Location} from '@angular/common';
+import {ToastService} from '../../services/toast-service';
 
 @Component({
-  selector: 'app-book-view',
-  imports: [],
-  templateUrl: './book-view.html',
-  styleUrl: './book-view.css'
+    selector: 'app-book-view',
+    imports: [],
+    providers: [BookViewService],
+    templateUrl: './book-view.html',
+    styleUrl: './book-view.css'
 })
+
 export class BookView {
-  book: Book | null = null;
+    route = inject(ActivatedRoute);
+    router = inject(Router)
+    bookViewService = inject(BookViewService);
+    location = inject(Location);
+    toastService = inject(ToastService);
+    bookId: string = "";
 
-  route = inject(ActivatedRoute);
 
-  ngOnInit() {
+    book = this.bookViewService.book;
 
-    const bookId = this.route.snapshot.paramMap.get('id')!;
+    constructor() {
+        effect(() => {
+            if (this.bookViewService.error()) {
+                this.toastService.showError("Livre non trouvé", "L'id " + this.bookId + " n'existe pas");
+                this.router.navigate(['/board']);
+            }
+        });
+    }
 
-  }
+    ngOnInit() {
+
+        this.bookId = this.route.snapshot.paramMap.get('id')!;
+        this.bookViewService.loadBookById(this.bookId);
+
+
+    }
 }

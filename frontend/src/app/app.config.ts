@@ -11,6 +11,8 @@ import {provideAnimations} from '@angular/platform-browser/animations';
 import {providePrimeNG} from 'primeng/config';
 import {provideStore} from '@ngxs/store';
 import {BookFormState} from './shared/forms/form-create-book/store/BookFormStore';
+import {MessageService} from 'primeng/api';
+import {ToastService} from './services/toast-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,5 +33,8 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     provideStore([BookFormState]),
+    MessageService,
+    ToastService
+
   ]
 };

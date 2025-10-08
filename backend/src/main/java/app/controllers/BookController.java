@@ -36,8 +36,8 @@ public class BookController {
         return this.bookService.getAllBooksAvailableLetter();
     }
 
-    @GetMapping("{bookId}")
-    public BookDTO getBookById(@PathVariable Long bookId) {
+    @GetMapping("/id")
+    public BookDTO getBookById(@RequestParam(required = true) Long bookId) {
         return this.bookService.getBookById(bookId);
     }
 

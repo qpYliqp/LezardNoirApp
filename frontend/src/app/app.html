@@ -1,16 +1,15 @@
+<p-toast></p-toast>
 <div class="flex flex-col w-screen h-screen">
   <div class="lg:p-4 p-2 border-b-3 border-secondary flex items-center">
-    <img src="/assets/lezard-noir.png" alt="Logo" class="lg:h-16 h-5 mr-2"/>
+    <img
+      alt="Logo"
+      class="lg:h-16 h-5 mr-2"
+      src="/assets/lezard-noir.png"/>
   </div>
-
-  <div class="flex flex-row flex-1 max-w-screen overflow-x-hidden  overflow-y-hidden">
+  <div class="flex flex-row flex-1 max-w-screen overflow-x-hidden overflow-y-hidden">
     <app-sidebar class="lg:block hidden"></app-sidebar>
-
-    <div class="flex-1 min-w-0  ">
+    <div class="flex-1 min-w-0">
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-
-
-

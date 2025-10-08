@@ -1,14 +1,13 @@
 export class Book {
-  id: number;
-  title: string;
+  id!: number;
+  title!: string;
+  isbn!: string;
+  nuart!: string;
+  pages!: number;
+  price!: number;
   coverUrl: string | null = null;
 
-  constructor(data: any) {
-    this.id = Number(data.id);
-    this.title = String(data.title);
-    if (data.coverUrl) {
-      this.coverUrl = data.coverUrl;
-    }
+  constructor(data: Partial<Book> = {}) {
+    Object.assign(this, data);
   }
 }
-

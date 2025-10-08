@@ -73,7 +73,7 @@ public class BookService {
     public BookDTO getBookById(Long bookId) {
         Book book = this.bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookException("Book not found with bookId: " + bookId));
-        return BookMapper.INSTANCE.toDTO(book);
+        return this.mapToBookDTOWithUrl(book);
     }
 
     @Transactional
