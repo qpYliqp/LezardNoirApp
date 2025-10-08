@@ -12,7 +12,7 @@ import {providePrimeNG} from 'primeng/config';
 import {provideStore} from '@ngxs/store';
 import {BookFormState} from './shared/forms/form-create-book/store/BookFormStore';
 import {MessageService} from 'primeng/api';
-import {ToastService} from './services/toast-service';
+import {ToastService} from './services/ToastService/toast-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

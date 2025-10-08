@@ -49,7 +49,6 @@ export class TitlesOverview {
 
   filters: BookFilter = {
     startWithPrefix: null,
-
   }
 
   searchValue: string = '';

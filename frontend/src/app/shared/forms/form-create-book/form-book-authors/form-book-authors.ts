@@ -1,6 +1,10 @@
-import {Component} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Component, inject, ViewChild} from '@angular/core';
+import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {MultiSelect} from 'primeng/multiselect';
+import {AuthorService} from '../../../../services/AuthorService/author-service';
+import {BookAuthorsFormDTO} from './model/BookAuthorsFormDTO';
+import {Author} from '../../../../models/Author';
+import {BookFormStore} from '../store/BookFormStore';
 
 @Component({
   selector: 'app-form-book-authors',
@@ -9,32 +13,58 @@ import {MultiSelect} from 'primeng/multiselect';
     ReactiveFormsModule,
     MultiSelect
   ],
+  providers: [AuthorService],
   templateUrl: './form-book-authors.html',
   styleUrl: './form-book-authors.css'
 })
 export class FormBookAuthors {
-  interests = [
-    {name: "Nature"},
-    {name: "Art"},
-    {name: "Music"},
-    {name: "Design"},
-    {name: "Photography"},
-    {name: "Movies"},
-    {name: "Sports"},
-    {name: "Gaming"},
-    {name: "Traveling"},
-    {name: "Dancing"},
-    {name: "Photography"},
-    {name: "Movies"},
-    {name: "Sports"},
-    {name: "Gaming"},
-    {name: "Traveling"},
-    {name: "Dancing"},
-  ];
 
-  selectedInterests: { name: string }[] = [];
+  authorService = inject(AuthorService);
+  bookFormStore = inject(BookFormStore);
+  allAuthors: Author[] = [];
+  bookAuthors = new BookAuthorsFormDTO();
+  hasSubmited: boolean = false;
 
-  get isValid(): boolean {
-    return this.selectedInterests.length > 0;
+
+  @ViewChild('formBookAuthors') formBookAuthors?: NgForm;
+
+
+  ngOnInit() {
+    this.loadAllAuthors();
+    const bookFromStore = this.bookFormStore.book();
+    if (bookFromStore) {
+      this.bookAuthors = {...bookFromStore};
+    }
+  }
+
+
+  public onSubmit(): boolean {
+    this.hasSubmited = true;
+    if (this.formBookAuthors && this.formBookAuthors.valid) {
+      this.hasSubmited = false;
+      this.bookFormStore.updateBook(this.bookAuthors);
+      console.log(this.bookFormStore.book())
+      return true;
+    }
+    console.log("zebizob")
+    return false;
+  }
+
+  removeAuthor(author: Author) {
+    this.bookAuthors.authors = this.bookAuthors!.authors!.filter(a => a.id !== author.id)
+  }
+
+
+  loadAllAuthors() {
+    this.authorService.getAllAuthors().subscribe({
+      next: (data) => {
+        this.allAuthors = data;
+        console.log('Liste des auteurs :', this.allAuthors);
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des auteurs', err);
+      }
+    });
+    console.log("ziezi")
   }
 }

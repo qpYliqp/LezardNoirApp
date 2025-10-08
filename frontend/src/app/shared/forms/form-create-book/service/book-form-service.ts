@@ -16,16 +16,11 @@ export class BookFormService {
   public createBook(book: BookCreationDTO) {
     const formData = new FormData();
 
-    formData.append('title', book.title ?? '');
-    formData.append('isbn', book.isbn ?? '');
-    formData.append('price', book.price?.toString() ?? '0');
-    formData.append('pages', book.pages?.toString() ?? '0');
-    formData.append('nuart', book.nuart ?? '');
-    formData.append('date', book.date?.toISOString() ?? '');
-    formData.append('summary', book.summary ?? '');
-    formData.append('hook', book.hook ?? '');
-    formData.append('marketing', book.marketing ?? '');
-    formData.append('note', book.note ?? '');
+    const bookBlob = new Blob([JSON.stringify(book)], {
+      type: 'application/json'
+    });
+    formData.append('book', bookBlob, 'book.json');
+
 
     if (book.coverFile) {
       formData.append('coverFile', book.coverFile, book.coverFile.name);

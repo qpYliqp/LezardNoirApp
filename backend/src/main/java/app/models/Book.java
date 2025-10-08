@@ -35,7 +35,7 @@ public class Book {
     private String marketing;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),

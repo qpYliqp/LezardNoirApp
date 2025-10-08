@@ -46,7 +46,7 @@ export class FormCreateBook implements OnInit {
 
   @ViewChild(FormBookDetails) formBookDetail?: FormBookDetails;
   @ViewChild(FormBookMarketing) formBookMarketing?: FormBookMarketing;
-  @ViewChild(FormBookMarketing) formBookMarAuthor?: FormBookMarketing;
+  @ViewChild(FormBookAuthors) formBookAuthor?: FormBookAuthors;
 
 
   nextStep() {
@@ -59,12 +59,15 @@ export class FormCreateBook implements OnInit {
 
       case 1:
         if (this.formBookMarketing?.onSubmit()) {
-          this.bookFormService.createBook(this.bookFormStore.book());
           this.currentStep++;
         }
         break;
       case 2:
-        this.closeBookForm();
+        if (this.formBookAuthor?.onSubmit()) {
+          this.bookFormService.createBook(this.bookFormStore.book());
+          this.closeBookForm();
+        }
+
         break;
 
 

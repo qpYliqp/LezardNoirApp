@@ -1,3 +1,5 @@
+import {Author} from '../../../../models/Author';
+
 export class BookCreationDTO {
   // title: string | null = null;
   // isbn: string | null = null;
@@ -21,4 +23,5 @@ export class BookCreationDTO {
   marketing: string | null = "markeitng";
   note: string | null = null;
   coverFile: File | null = null;
+  authors: Author[] | null = null;
 }

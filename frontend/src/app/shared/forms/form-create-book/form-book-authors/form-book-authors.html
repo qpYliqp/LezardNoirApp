@@ -1,29 +1,37 @@
-<form>
+<form
+  #formBookAuthors="ngForm">
   <div class="py-5 px-2 w-full flex  flex-col md:flex-row h-80 md:h-auto ">
     <div class="flex md:flex-1 flex-col border-b-2 md:border-b-0 md:border-r-2 border-third md:h-75  py-4 md:px-3">
       <p-multi-select
-        [(ngModel)]="selectedInterests"
+        [(ngModel)]="bookAuthors.authors"
         [emptyFilterMessage]="'Aucun auteur trouvé'"
         [emptyMessage]="'Aucun auteur trouvé'"
         [filter]="true"
         [maxSelectedLabels]="0"
-        [options]="interests"
+        [options]="allAuthors"
         [placeholder]="'Choisissez un auteur'"
         [selectedItemsLabel]="'{0} auteurs sélectionnés'"
         [showToggleAll]="false"
         class="bg-third text-white outline-none border-none"
         dataKey="name"
-        name="interests"
+        name="authors"
         optionLabel="name"
         required></p-multi-select>
+      @if (hasSubmited && (!bookAuthors.authors || bookAuthors.authors.length === 0)) {
+        <div class="text-error text-sm mt-2">
+          Sélectionnez au moins un auteur
+        </div>
+      }
     </div>
     <div class="flex-1   ">
       <div
         class=" border-secondary  min-h-20 max-h-70   overflow-y-auto flex flex-wrap gap-3 px-3 py-4 items-start">
-        @for (interest of selectedInterests; track interest) {
+        @for (author of bookAuthors.authors; track author) {
           <div class="bg-third rounded-xl text-secondary px-4 py-2 flex items-center gap-2">
-            <p class="m-0 leading-none">{{ interest.name }}</p>
-            <i class="pi pi-times text-xs cursor-pointer leading-none"></i>
+            <p class="m-0 leading-none">{{ author.name }}</p>
+            <i
+              class="pi pi-times text-xs cursor-pointer leading-none"
+              (click)="removeAuthor(author)"></i>
           </div>
         }
       </div>

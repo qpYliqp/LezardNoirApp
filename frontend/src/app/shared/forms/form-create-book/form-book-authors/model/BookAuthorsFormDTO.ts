@@ -1,7 +1,6 @@
 import {Author} from '../../../../../models/Author';
 
-export class BookDetailsFormDTO {
-
+export class BookAuthorsFormDTO {
   authors: Author[] | null = null;
 
 }

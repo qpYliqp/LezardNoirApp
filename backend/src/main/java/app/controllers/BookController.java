@@ -6,6 +6,7 @@ import app.dto.BookUpdateDTO;
 import app.dto.StatusDTO;
 import app.services.BookService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -51,9 +52,12 @@ public class BookController {
         return this.bookService.updateGlobalStatus(bookId, status.getId());
     }
 
-    @PostMapping()
-    public BookDTO createBook(@ModelAttribute BookUpdateDTO book) throws Exception {
-        return bookService.createBook(book);
+    @PostMapping
+    public BookDTO createBook(
+            @RequestPart("book") BookUpdateDTO book,
+            @RequestPart(value = "coverFile", required = false) MultipartFile coverFile
+    ) throws Exception {
+        return bookService.createBook(book, coverFile);
     }
 
 }

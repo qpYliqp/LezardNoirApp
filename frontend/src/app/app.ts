@@ -2,7 +2,7 @@ import {Component, inject, signal} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {Sidebar} from './component/sidebar/sidebar';
 import {Toast} from 'primeng/toast';
-import {ToastService} from './services/toast-service';
+import {ToastService} from './services/ToastService/toast-service';
 
 
 @Component({

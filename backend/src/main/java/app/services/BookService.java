@@ -1,5 +1,6 @@
 package app.services;
 
+import app.dto.AuthorDTO;
 import app.dto.BookDTO;
 import app.dto.BookUpdateDTO;
 import app.exceptions.AuthorException;
@@ -15,10 +16,13 @@ import app.repositories.StatusRepository;
 import app.repositories.specifications.BookSpecification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -100,12 +104,21 @@ public class BookService {
 
 
     @Transactional
-    public BookDTO createBook(BookUpdateDTO dto) throws Exception {
+    public BookDTO createBook(BookUpdateDTO dto, MultipartFile coverFile) throws Exception {
         Book book = BookMapper.INSTANCE.fromupdateDTOtoEntity(dto);
-        if (dto.getCoverFile() != null && !dto.getCoverFile().isEmpty()) {
+        if (coverFile != null && !coverFile.isEmpty()) {
 
-            String newCoverFileName = this.minioService.updateCover(book.getCoverFileName(), dto.getCoverFile());
+            String newCoverFileName = this.minioService.updateCover(book.getCoverFileName(), coverFile);
             book.setCoverFileName(newCoverFileName);
+        }
+        if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
+            Set<Long> authorIds = dto.getAuthors().stream()
+                    .map(AuthorDTO::getId)
+                    .collect(Collectors.toSet());
+
+            List<Author> managedAuthors = (List<Author>) authorRepository.findAllById(authorIds);
+
+            managedAuthors.forEach(book::addAuthor);
         }
         bookRepository.save(book);
         return mapToBookDTOWithUrl(book);
