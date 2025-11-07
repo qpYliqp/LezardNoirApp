@@ -1,6 +1,5 @@
 package app.models;
 
-import app.enums.StatusName;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -17,10 +16,6 @@ public class Status {
 
     @Column(unique = true)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(unique = true)
-    private StatusName code;
 
     @OneToMany(mappedBy = "globalStatus", fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();

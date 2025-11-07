@@ -3,6 +3,7 @@ package app.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -20,4 +21,5 @@ public class BookUpdateDTO {
     private String marketing;
     private StatusDTO globalStatus;
     private Set<AuthorDTO> authors;
+    private LocalDate releaseDate;
 }

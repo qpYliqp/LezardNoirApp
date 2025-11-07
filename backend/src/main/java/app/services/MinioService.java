@@ -111,6 +111,6 @@ public class MinioService {
     private String generateUniqueFileName(MultipartFile file) {
         String extension = getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
         String uniqueId = UUID.randomUUID().toString();
-        return uniqueId + extension;
+        return uniqueId;
     }
 }

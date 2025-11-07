@@ -1,12 +1,12 @@
 <div
   (click)="goToBookDetail()"
-  class="bg-third hover:bg-secondary transition-colors border-third border-2 overflow-hidden cursor-pointer h-full flex flex-col">
+  class="bg-third select-none hover:bg-secondary transition-colors border-third border-2 overflow-hidden cursor-pointer h-full flex flex-col">
   @if (book().coverUrl !== null) {
     <img
       [src]="book().coverUrl"
       [alt]="book().title"
       loading="lazy"
-      class="w-full h-30 object-cover">
+      class="w-full h-30 4xl:object-contain object-fit">
   } @else {
     <div class="w-full h-30 bg-third text-center text-secondary flex items-center justify-center flex-col gap-2">
       <i

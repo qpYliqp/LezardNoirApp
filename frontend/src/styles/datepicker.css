@@ -1,22 +1,25 @@
-@layer tailwind
-{
-  .p-datepicker-panel, .p-datepicker-header, .p-datepicker-input
-  {
+@layer tailwind {
+  .p-datepicker-panel, .p-datepicker-header, .p-datepicker-input {
     @apply bg-third text-white
   }
 
-  .p-datepicker-day-cell span, .p-datepicker-weekday-cell span
-  {
+  .p-datepicker-day-cell span, .p-datepicker-weekday-cell span {
     color: white;
   }
 
-  .p-datepicker-select-month,   .p-datepicker-select-year
-  {
+  .p-datepicker-select-month, .p-datepicker-select-year {
     @apply bg-third text-white;
   }
 
-  .p-datepicker-select-month:hover,   .p-datepicker-select-year:hover
-  {
+  .p-datepicker-select-month:hover, .p-datepicker-select-year:hover {
     @apply bg-secondary;
+  }
+
+  .p-datepicker-next-button, .p-datepicker-prev-button {
+    @apply bg-transparent text-white
+  }
+
+  .p-datepicker-day {
+    @apply hover:bg-secondary
   }
 }

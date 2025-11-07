@@ -4,6 +4,7 @@ package app.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -24,5 +25,6 @@ public class BookDTO {
     private String coverFileName;
     private String coverUrl;
     private AuthorDTO author;
+    private LocalDate releaseDate;
 
 }

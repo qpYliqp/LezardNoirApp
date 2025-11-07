@@ -87,7 +87,11 @@ export class TitlesOverviewService {
     const listForLetter = updatedGroups.get(firstLetter) || [];
     updatedGroups.set(firstLetter, [...listForLetter, book]);
 
-    this.booksGroupedSignal.set(updatedGroups);
+    const sortedGroups = new Map(
+      Array.from(updatedGroups.entries()).sort(([a], [b]) => a.localeCompare(b))
+    );
+
+    this.booksGroupedSignal.set(sortedGroups);
   }
 
 }

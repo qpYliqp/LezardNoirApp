@@ -44,6 +44,11 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public List<BookDTO> getAllBooks(String startWithPrefix) {
+
+        List<Book> t = this.bookRepository.findAll(BookSpecification.startWith(startWithPrefix))
+                .stream()
+                .toList();
+
         return this.bookRepository.findAll(BookSpecification.startWith(startWithPrefix))
                 .stream()
                 .map(this::mapToBookDTOWithUrl)
@@ -130,7 +135,7 @@ public class BookService {
             dto.setCoverUrl(this.minioService.getCover(book.getCoverFileName()));
             return dto;
         } catch (Exception e) {
-            return null;
+            return dto;
         }
     }
 }

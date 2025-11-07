@@ -15,6 +15,8 @@
     --p-multiselect-background: var(--color-third);
     --p-checkbox-background: var(--color-third);
     --p-checkbox-checked-background: var(--color-secondary);
+    --p-datepicker-panel-border-color: var(--color-secondary);
+    --p-datepicker-today-background: var(--color-third);
   }
 
   @theme
@@ -26,10 +28,18 @@
     /*2E2F2B*/
     --color-error: #dc3545;
     --color-white: oklch(1 0 0);
+    --breakpoint-3xl: 128rem;
+
+    --breakpoint-4xl: 200rem;
+
   }
 
   .p-toast {
     z-index: 9999 !important;
+  }
+
+  .p-datepicker-input {
+    @apply border-none outline-secondary
   }
 
   .p-steppanel .p-stepper-separator {
