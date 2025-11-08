@@ -128,7 +128,7 @@ public class BookService {
         bookRepository.save(book);
         return mapToBookDTOWithUrl(book);
     }
-
+    
     public BookDTO mapToBookDTOWithUrl(Book book) {
         BookDTO dto = BookMapper.INSTANCE.toDTO(book);
         try {
@@ -138,4 +138,5 @@ public class BookService {
             return dto;
         }
     }
+
 }
