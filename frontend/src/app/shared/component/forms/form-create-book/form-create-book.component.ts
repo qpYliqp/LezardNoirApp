@@ -9,6 +9,7 @@ import {BookFormStore} from './store/BookFormStore';
 import {FormBookMarketing} from './form-book-marketing/form-book-marketing.component';
 import {BookFormService} from './service/book-form.service';
 import {FormBookAuthors} from './form-book-authors/form-book-authors.component';
+import {FormBookSteps} from './form-book-steps/form-book-steps.component';
 
 
 @Component({
@@ -26,6 +27,7 @@ import {FormBookAuthors} from './form-book-authors/form-book-authors.component';
     FormBookDetails,
     FormBookMarketing,
     FormBookAuthors,
+    FormBookSteps,
 
   ],
   templateUrl: './form-create-book.component.html',
@@ -47,6 +49,7 @@ export class FormCreateBook implements OnInit {
   @ViewChild(FormBookDetails) formBookDetail?: FormBookDetails;
   @ViewChild(FormBookMarketing) formBookMarketing?: FormBookMarketing;
   @ViewChild(FormBookAuthors) formBookAuthor?: FormBookAuthors;
+  @ViewChild(FormBookSteps) formBookSteps?: FormBookSteps;
 
 
   nextStep() {
@@ -64,10 +67,13 @@ export class FormCreateBook implements OnInit {
         break;
       case 2:
         if (this.formBookAuthor?.onSubmit()) {
-          this.bookFormService.createBook(this.bookFormStore.book());
-          this.closeBookForm();
+          this.currentStep++;
         }
+        break;
 
+      case 3:
+        this.bookFormService.createBook(this.bookFormStore.book());
+        this.closeBookForm();
         break;
 
 

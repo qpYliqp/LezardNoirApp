@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Author} from '../../models/Author';
 import {Observable} from 'rxjs';
-import { apiURL } from '../../../../contants';
+import {apiURL} from '../../../../contants';
+import {ProductionStep} from '../../models/ProductionStep';
 
 @Injectable()
 export class ProductionStepService {
@@ -13,7 +14,7 @@ export class ProductionStepService {
   constructor(private http: HttpClient) {
   }
 
-  getAllAuthors(): Observable<Author[]> {
+  getAllProductionStep(): Observable<ProductionStep[]> {
 
     return this.http.get<Author[]>(this.apiUrl);
 

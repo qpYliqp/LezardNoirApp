@@ -39,8 +39,8 @@ export class FormBookDetails {
   ngOnInit() {
     const bookFromStore = this.bookFormStore.book();
     if (bookFromStore) {
-      // this.bookDetail = {...bookFromStore};
-      this.bookDetail.title = bookFromStore.title;
+      this.bookDetail = {...bookFromStore};
+      // this.bookDetail.title = bookFromStore.title;
     }
     console.log(this.bookDetail)
   }

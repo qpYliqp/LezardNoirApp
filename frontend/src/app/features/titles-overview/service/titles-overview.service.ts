@@ -1,97 +1,75 @@
-import {Injectable, signal} from '@angular/core';
+import {computed, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {catchError, finalize, map, of} from 'rxjs';
 import {apiURL} from '../../../../contants';
 import {BookFilter} from '../BookFilter';
-import { Book } from '../../../shared/models/Book';
+import {Book} from '../../../shared/models/Book';
 
 @Injectable()
 export class TitlesOverviewService {
-
-  private allBooksSignal = signal<Book[]>([]);
+  readonly booksGrouped = computed<Map<string, Book[]>>(() => {
+    const groups = new Map<string, Book[]>();
+    for (const book of this.allBooks()) {
+      const key = firstLetterKey(book.title);
+      const current = groups.get(key) ?? [];
+      groups.set(key, [...current, book]);
+    }
+    return new Map(
+      Array.from(groups.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([letter, list]) => [
+          letter,
+          [...list].sort((x, y) => x.title.localeCompare(y.title)),
+        ])
+    );
+  });
+  private readonly loadingSignal = signal<boolean>(false);
+  readonly loading = this.loadingSignal.asReadonly();
+  private readonly apiUrl = `${apiURL}books`;
+  private readonly allBooksSignal = signal<Book[]>([]);
   readonly allBooks = this.allBooksSignal.asReadonly();
 
-  private booksGroupedSignal = signal<Map<string, Book[]>>(new Map());
-  readonly booksGrouped = this.booksGroupedSignal.asReadonly();
-
-  private loadingSignal = signal<boolean>(false);
-  readonly loading = this.loadingSignal.asReadonly();
-
-  private readonly apiUrl = `${apiURL}books`;
-
-  constructor(private http: HttpClient) {
-    this.loadBooksByLetter();
+  constructor(private readonly http: HttpClient) {
   }
 
   loadAllBooks(filters?: BookFilter): void {
-    const filteredFilters = Object.fromEntries(
-      Object.entries(filters || {}).filter(([_, v]) => v != null)
+    const filtered = Object.fromEntries(
+      Object.entries(filters ?? {}).filter(([, v]) => v !== null && v !== undefined && v !== '')
     );
-
-    const params = new HttpParams({fromObject: filteredFilters as any});
+    const params = new HttpParams({fromObject: filtered as Record<string, string>});
 
     this.loadingSignal.set(true);
 
     this.http.get<Book[]>(this.apiUrl, {params}).pipe(
-      map(books => books.map(b => new Book(b))),
+      map(arr => arr.map(b => new Book(b))),
+      map(books => books.sort((a, b) => a.title.localeCompare(b.title))),
       catchError(err => {
-        console.error('Erreur lors du chargement des livres :', err.message);
-        return of([]);
+        console.error('Erreur lors du chargement des livres :', err?.message ?? err);
+        return of([] as Book[]);
       }),
-      finalize(() => {
-        this.loadingSignal.set(false);
-      })
+      finalize(() => this.loadingSignal.set(false)),
     ).subscribe(books => this.allBooksSignal.set(books));
   }
 
-  loadBooksByLetter(): void {
-    this.loadingSignal.set(true);
-
-    this.http.get<Record<string, any[]>>(`${this.apiUrl}/letter`).pipe(
-      map(response => {
-        const result = new Map<string, Book[]>();
-        Object.entries(response).forEach(([letter, books]) => {
-
-          result.set(letter, books.map(b => new Book(b)));
-        });
-        console.log(result)
-        return result;
-      }),
-      catchError(err => {
-        console.error('Erreur lors du chargement des livres groupés :', err.message);
-        return of(new Map<string, Book[]>());
-      }),
-      finalize(() => {
-        this.loadingSignal.set(false);
-      })
-    ).subscribe(mapResult => this.booksGroupedSignal.set(mapResult));
-  }
-
   addBook(book: Book): void {
-    if (!book || !book.title) return;
-
-    this.addToAllBook(book);
-    this.addToBookGroupedByLetter(book);
+    if (!book || !book.title?.trim()) return;
+    const exists = this.allBooks().some(b => equalsId(b, book));
+    const next = exists
+      ? this.allBooks().map(b => (equalsId(b, book) ? book : b))
+      : [...this.allBooks(), book];
+    next.sort((a, b) => a.title.localeCompare(b.title));
+    this.allBooksSignal.set(next);
   }
+}
 
-  private addToAllBook(book: Book): void {
-    const updatedList = [...this.allBooksSignal(), book];
-    this.allBooksSignal.set(updatedList);
-  }
+function firstLetterKey(raw: string | undefined | null): string {
+  const title = (raw ?? '').trim();
+  if (!title) return '#';
+  const normalized = title.normalize('NFD').replace(/\p{Diacritic}/gu, '').toUpperCase();
+  const first = normalized.charAt(0);
+  return /[A-Z]/.test(first) ? first : '#';
+}
 
-  private addToBookGroupedByLetter(book: Book): void {
-    const firstLetter = book.title.charAt(0).toUpperCase();
-    const currentGroups = this.booksGroupedSignal();
-    const updatedGroups = new Map(currentGroups);
-
-    const listForLetter = updatedGroups.get(firstLetter) || [];
-    updatedGroups.set(firstLetter, [...listForLetter, book]);
-
-    const sortedGroups = new Map(
-      Array.from(updatedGroups.entries()).sort(([a], [b]) => a.localeCompare(b))
-    );
-
-    this.booksGroupedSignal.set(sortedGroups);
-  }
-
+function equalsId(a: Book, b: Book): boolean {
+  return (a as any).id != null && (a as any).id === (b as any).id;
 }

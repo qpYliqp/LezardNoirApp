@@ -65,6 +65,5 @@ export class FormBookAuthors {
         console.error('Erreur lors du chargement des auteurs', err);
       }
     });
-    console.log("ziezi")
   }
 }

@@ -1,17 +1,17 @@
 import {Author} from '../../../../models/Author';
 
 export class BookCreationDTO {
-  title: string | null = null;
-  isbn: string | null = null;
-  price: number | null = null;
-  pages: number | null = null;
-  nuart: string | null = null;
-  releaseDate: Date | null = null;
-  summary: string | null = null;
-  hook: string | null = null;
-  marketing: string | null = null;
-  note: string | null = null;
+  title: string | null = "null";
+  isbn: string | null = "9788925283807";
+  price: number | null = 55;
+  pages: number | null = 55;
+  nuart: string | null = "null";
+  releaseDate: Date | null = new Date();
+  summary: string | null = "null";
+  hook: string | null = "null";
+  marketing: string | null = "null";
+  note: string | null = "null";
   coverFile: File | null = null;
-  date: Date | null = null;
+  date: Date | null = new Date();
   authors: Author[] | null = null;
 }

@@ -7,14 +7,21 @@
   <swiper-container
     [id]="'swiper-' + id()"
     breakpoints='{
-      "0":    { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 10 },
-      "480":  { "slidesPerView": 3, "slidesPerGroup": 2, "spaceBetween": 12 },
-      "768":  { "slidesPerView": 4, "slidesPerGroup": 3, "spaceBetween": 16 },
-      "1024": { "slidesPerView": 5, "slidesPerGroup": 5, "spaceBetween": 20 },
-      "1280": { "slidesPerView": 10, "slidesPerGroup": 5, "spaceBetween": 24 },
-      "2048": { "slidesPerView": 12, "slidesPerGroup": 5, "spaceBetween": 24 },
-      "3200": { "slidesPerView": 16, "slidesPerGroup": 5, "spaceBetween": 24 }
-    }'
+    "0":    { "slidesPerView": 2,  "slidesPerGroup": 2, "spaceBetween": 10 },
+    "480":  { "slidesPerView": 3,  "slidesPerGroup": 2, "spaceBetween": 12 },
+    "640":  { "slidesPerView": 4, "slidesPerGroup": 3, "spaceBetween": 13 },
+    "768":  { "slidesPerView": 5,  "slidesPerGroup": 3, "spaceBetween": 16 },
+
+    "1024": { "slidesPerView": 5,  "slidesPerGroup": 4, "spaceBetween": 16 },
+    "1280": { "slidesPerView": 6,  "slidesPerGroup": 4, "spaceBetween": 18 },
+    "1536": { "slidesPerView": 8,  "slidesPerGroup": 4, "spaceBetween": 20 },
+    "1700": { "slidesPerView": 9,  "slidesPerGroup": 4, "spaceBetween": 20 },
+    "1920": { "slidesPerView": 10, "slidesPerGroup": 5, "spaceBetween": 22 },
+
+    "2048": { "slidesPerView": 12, "slidesPerGroup": 6, "spaceBetween": 24 },
+    "2560": { "slidesPerView": 14, "slidesPerGroup": 7, "spaceBetween": 24 },
+    "3200": { "slidesPerView": 18, "slidesPerGroup": 9, "spaceBetween": 24 }
+  }'
     class="swiper-custom w-full"
     init="false"
     loop="false"
