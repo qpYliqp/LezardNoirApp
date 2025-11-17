@@ -1,4 +1,37 @@
-<form
-  #formBookSteps="ngForm">
-  <div class="py-5 px-2 w-full flex  flex-col md:flex-row h-80 md:h-auto "></div>
+<form #formBookSteps="ngForm">
+  <div
+    class="relative py-5 px-2 gap-5 w-full grid grid-cols-1 md:grid-cols-2 text-white overflow-y-auto">
+    @for (step of bookStepsDTO; let i = $index; track step) {
+      <div
+        class="flex flex-col gap-5 p-4 bg-fourth rounded-sm">
+        <p class="text-md font-semibold">{{ step.productionStep.name }}</p>
+        <p-floatlabel
+          class="w-full"
+          variant="on">
+          <p-select
+            required
+            [options]="allStatus"
+            [(ngModel)]="step.status"
+            optionLabel="name"
+            name="status-{{ step.productionStep.id }}"
+            class="w-full border-secondary border-1 border-secondary  outline-none"
+            [appendTo]="'body'"
+            scrollHeight="200px"
+            placeholder="Choisir un statut"/>
+          <label class="text-secondary">Status</label>
+        </p-floatlabel>
+        <p-floatlabel
+          class="w-full"
+          variant="on">
+          <p-datePicker
+            appendTo="body"
+            [(ngModel)]="step.releaseDate"
+            class="bg-third text-white border-1 border-secondary outline-none w-full"
+            name="date-{{ step.productionStep.id }}"
+            required/>
+          <label class="text-secondary">Date de sortie</label>
+        </p-floatlabel>
+      </div>
+    }
+  </div>
 </form>

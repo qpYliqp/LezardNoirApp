@@ -1,4 +1,5 @@
 import {Author} from '../../../../models/Author';
+import {BookStepFormDTO} from '../form-book-steps/model/BookStepFormDTO';
 
 export class BookCreationDTO {
   title: string | null = "null";
@@ -14,4 +15,5 @@ export class BookCreationDTO {
   coverFile: File | null = null;
   date: Date | null = new Date();
   authors: Author[] | null = null;
+  bookSteps: BookStepFormDTO[] = [];
 }

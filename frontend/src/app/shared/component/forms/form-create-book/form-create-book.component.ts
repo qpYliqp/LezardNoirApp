@@ -71,9 +71,13 @@ export class FormCreateBook implements OnInit {
         }
         break;
 
+
       case 3:
-        this.bookFormService.createBook(this.bookFormStore.book());
-        this.closeBookForm();
+        if (this.formBookSteps?.onSubmit()) {
+          console.log("not normal")
+          this.bookFormService.createBook(this.bookFormStore.book());
+          this.closeBookForm();
+        }
         break;
 
 

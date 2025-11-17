@@ -7,6 +7,9 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface StatusMapper {
+    StatusMapper INSTANCE = Mappers.getMapper(StatusMapper.class);
+
     StatusDTO toDto(Status status);
+
     Status toEntity(StatusDTO statusDTO);
 }
