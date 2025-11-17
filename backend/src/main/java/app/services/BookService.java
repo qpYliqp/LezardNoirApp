@@ -2,16 +2,22 @@ package app.services;
 
 import app.dto.AuthorDTO;
 import app.dto.BookDTO;
+import app.dto.BookStepCreationDTO;
 import app.dto.BookUpdateDTO;
 import app.exceptions.AuthorException;
 import app.exceptions.BookException;
+import app.exceptions.ProductionStepException;
 import app.exceptions.StatusException;
 import app.mappers.BookMapper;
 import app.models.Author;
 import app.models.Book;
+import app.models.BookStep;
+import app.models.ProductionStep;
 import app.models.Status;
 import app.repositories.AuthorRepository;
 import app.repositories.BookRepository;
+import app.repositories.BookStepRepository;
+import app.repositories.ProductionStepRepository;
 import app.repositories.StatusRepository;
 import app.repositories.specifications.BookSpecification;
 import org.slf4j.Logger;
@@ -37,12 +43,18 @@ public class BookService {
 
     private final StatusRepository statusRepository;
 
+    private final BookStepRepository bookStepRepository;
+
+    private final ProductionStepRepository productionStepRepository;
+
     private final MinioService minioService;
 
-    public BookService(final BookRepository bookRepository, final AuthorRepository authorRepository, final StatusRepository statusRepository, final MinioService minioService) {
+    public BookService(final BookRepository bookRepository, final AuthorRepository authorRepository, final StatusRepository statusRepository, final BookStepRepository bookStepRepository, final ProductionStepRepository productionStepRepository, final MinioService minioService) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.statusRepository = statusRepository;
+        this.bookStepRepository = bookStepRepository;
+        this.productionStepRepository = productionStepRepository;
         this.minioService = minioService;
     }
 
@@ -160,9 +172,42 @@ public class BookService {
             managedAuthors.forEach(book::addAuthor);
         }
 
-        bookRepository.save(book);
-        log.info("Successfully created book: {} (ID: {})", book.getTitle(), book.getId());
-        return mapToBookDTOWithUrl(book);
+        // Save book first to get the ID
+        Book savedBook = bookRepository.save(book);
+        log.info("Successfully created book: {} (ID: {})", savedBook.getTitle(), savedBook.getId());
+
+        // Associate book steps
+        if (dto.getBookSteps() != null && !dto.getBookSteps().isEmpty()) {
+            log.debug("Creating {} book steps for book {}", dto.getBookSteps().size(), savedBook.getTitle());
+            for (BookStepCreationDTO stepDTO : dto.getBookSteps()) {
+                BookStep bookStep = createBookStepFromDTO(stepDTO, savedBook);
+                bookStepRepository.save(bookStep);
+            }
+        }
+
+        return mapToBookDTOWithUrl(savedBook);
+    }
+
+    private BookStep createBookStepFromDTO(BookStepCreationDTO dto, Book book) {
+        BookStep bookStep = new BookStep();
+        bookStep.setBook(book);
+        bookStep.setEndDate(dto.getEndDate());
+
+        // Fetch and set ProductionStep
+        if (dto.getProductionStep() != null && dto.getProductionStep().getId() != null) {
+            ProductionStep productionStep = productionStepRepository.findById(dto.getProductionStep().getId())
+                    .orElseThrow(() -> new ProductionStepException("ProductionStep not found with id: " + dto.getProductionStep().getId()));
+            bookStep.setStep(productionStep);
+        }
+
+        // Fetch and set Status
+        if (dto.getStatus() != null && dto.getStatus().getId() != null) {
+            Status status = statusRepository.findById(dto.getStatus().getId())
+                    .orElseThrow(() -> new StatusException("Status not found with id: " + dto.getStatus().getId()));
+            bookStep.setStatus(status);
+        }
+
+        return bookStep;
     }
 
     public BookDTO mapToBookDTOWithUrl(Book book) {

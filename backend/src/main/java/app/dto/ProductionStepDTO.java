@@ -1,7 +1,12 @@
 package app.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ProductionStepDTO {
 
-    public long id;
-    public String name;
+    private Long id;
+    private String name;
 }

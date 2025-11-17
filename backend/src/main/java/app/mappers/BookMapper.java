@@ -20,6 +20,7 @@ public interface BookMapper {
     BookUpdateDTO toUpdateDTO(Book book);
 
     @Mapping(target = "authors", ignore = true)
+    @Mapping(target = "bookSteps", ignore = true)
     Book fromupdateDTOtoEntity(BookUpdateDTO dto);
 
 }

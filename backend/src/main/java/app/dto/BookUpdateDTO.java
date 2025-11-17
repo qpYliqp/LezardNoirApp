@@ -31,4 +31,5 @@ public class BookUpdateDTO {
     private StatusDTO globalStatus;
     private Set<AuthorDTO> authors;
     private LocalDate releaseDate;
+    private Set<BookStepCreationDTO> bookSteps;
 }

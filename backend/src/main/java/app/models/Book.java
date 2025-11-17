@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 public class Book {
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<BookStep> bookSteps = new HashSet<>();
 
     @Id
