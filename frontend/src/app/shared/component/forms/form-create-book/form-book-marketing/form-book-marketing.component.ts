@@ -1,9 +1,9 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, effect, inject, ViewChild} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {FloatLabel} from 'primeng/floatlabel';
 import {IBookMarketingForm} from './model/BookMarketingFormDTO';
-import {BookFormStore} from '../store/BookFormStore';
 import {Textarea} from 'primeng/textarea';
+import {BookFormFacadeService} from '../service/book-form-facade.service';
 
 @Component({
   selector: 'app-form-book-marketing',
@@ -24,23 +24,31 @@ export class FormBookMarketing {
     summary: null,
     note: null
   };
-  bookFormStore = inject(BookFormStore);
+  readonly facade = inject(BookFormFacadeService);
   hasSubmited: boolean = false;
 
   @ViewChild('formBookMarketing') formBookMarketing?: NgForm;
 
+  constructor() {
+    effect(() => {
+      const book = this.facade.book();
+      this.bookMarketing = {
+        hook: book.hook,
+        marketing: book.marketing,
+        summary: book.summary,
+        note: book.note
+      };
+    });
+  }
+
   ngOnInit() {
-    const bookFromStore = this.bookFormStore.book();
-    if (bookFromStore) {
-      this.bookMarketing = {...bookFromStore};
-    }
   }
 
   public onSubmit(): boolean {
     console.log("submit")
     this.hasSubmited = true;
     if (this.formBookMarketing && this.formBookMarketing.valid) {
-      this.bookFormStore.updateBook(this.bookMarketing);
+      this.facade.updateBook(this.bookMarketing);
       this.hasSubmited = false;
       return true;
     }

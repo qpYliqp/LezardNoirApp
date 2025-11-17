@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class BookStepDTO {
 
     private long id;
-    private ProductionStepDTO step;
+    private ProductionStepDTO productionStep;
     private StatusDTO status;
     private LocalDate endDate;
 }

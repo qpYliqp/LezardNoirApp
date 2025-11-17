@@ -2,6 +2,7 @@ import {BookStepFormDTO} from '../form-book-steps/model/BookStepFormDTO';
 import {Author} from '../../../../models/Author';
 
 export interface BookCreationDTO {
+  id?: number;
   title: string | null;
   isbn: string | null;
   price: number | null;

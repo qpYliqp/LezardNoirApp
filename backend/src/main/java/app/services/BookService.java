@@ -9,16 +9,8 @@ import app.exceptions.BookException;
 import app.exceptions.ProductionStepException;
 import app.exceptions.StatusException;
 import app.mappers.BookMapper;
-import app.models.Author;
-import app.models.Book;
-import app.models.BookStep;
-import app.models.ProductionStep;
-import app.models.Status;
-import app.repositories.AuthorRepository;
-import app.repositories.BookRepository;
-import app.repositories.BookStepRepository;
-import app.repositories.ProductionStepRepository;
-import app.repositories.StatusRepository;
+import app.models.*;
+import app.repositories.*;
 import app.repositories.specifications.BookSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,6 +180,75 @@ public class BookService {
         return mapToBookDTOWithUrl(savedBook);
     }
 
+    @Transactional
+    public BookDTO updateBook(Long bookId, BookUpdateDTO dto, MultipartFile coverFile) {
+        log.info("Updating book with ID: {}", bookId);
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> {
+                    log.error("Book not found with ID: {}", bookId);
+                    return new BookException("Book not found with bookId: " + bookId);
+                });
+
+        // Update basic fields
+        book.setTitle(dto.getTitle());
+        book.setPrice(dto.getPrice());
+        book.setPages(dto.getPages());
+        book.setIsbn(dto.getIsbn());
+        book.setNuart(dto.getNuart());
+        book.setNote(dto.getNote());
+        book.setSummary(dto.getSummary());
+        book.setHook(dto.getHook());
+        book.setMarketing(dto.getMarketing());
+        book.setReleaseDate(dto.getReleaseDate());
+
+        // Handle cover file upload
+        if (coverFile != null && !coverFile.isEmpty()) {
+            try {
+                log.debug("Uploading new cover file for book: {}", dto.getTitle());
+                String newCoverFileName = this.minioService.updateCover(book.getCoverFileName(), coverFile);
+                book.setCoverFileName(newCoverFileName);
+            } catch (Exception e) {
+                log.error("Failed to upload cover file for book: {}", dto.getTitle(), e);
+                throw new RuntimeException("Failed to upload cover file: " + e.getMessage());
+            }
+        }
+
+        // Update global status
+        if (dto.getGlobalStatus() != null && dto.getGlobalStatus().getId() != null) {
+            Status status = statusRepository.findById(dto.getGlobalStatus().getId())
+                    .orElseThrow(() -> new StatusException("Status not found with id: " + dto.getGlobalStatus().getId()));
+            book.setGlobalStatus(status);
+        }
+
+        // Update authors - clear and reassociate
+        book.getAuthors().clear();
+        if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
+            Set<Long> authorIds = dto.getAuthors().stream()
+                    .map(AuthorDTO::getId)
+                    .collect(Collectors.toSet());
+
+            log.debug("Associating {} authors with book", authorIds.size());
+            List<Author> managedAuthors = (List<Author>) authorRepository.findAllById(authorIds);
+            managedAuthors.forEach(book::addAuthor);
+        }
+
+        // Update book steps - remove old ones and add new ones
+        book.getBookSteps().clear();
+        if (dto.getBookSteps() != null && !dto.getBookSteps().isEmpty()) {
+            log.debug("Updating {} book steps for book {}", dto.getBookSteps().size(), book.getTitle());
+            for (BookStepCreationDTO stepDTO : dto.getBookSteps()) {
+                BookStep bookStep = createBookStepFromDTO(stepDTO, book);
+                book.getBookSteps().add(bookStep);
+            }
+        }
+
+        Book updatedBook = bookRepository.save(book);
+        log.info("Successfully updated book: {} (ID: {})", updatedBook.getTitle(), updatedBook.getId());
+
+        return mapToBookDTOWithUrl(updatedBook);
+    }
+
     private BookStep createBookStepFromDTO(BookStepCreationDTO dto, Book book) {
         BookStep bookStep = new BookStep();
         bookStep.setBook(book);
@@ -197,7 +258,7 @@ public class BookService {
         if (dto.getProductionStep() != null && dto.getProductionStep().getId() != null) {
             ProductionStep productionStep = productionStepRepository.findById(dto.getProductionStep().getId())
                     .orElseThrow(() -> new ProductionStepException("ProductionStep not found with id: " + dto.getProductionStep().getId()));
-            bookStep.setStep(productionStep);
+            bookStep.setProductionStep(productionStep);
         }
 
         // Fetch and set Status

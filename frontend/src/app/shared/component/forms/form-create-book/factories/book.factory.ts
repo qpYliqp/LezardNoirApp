@@ -1,7 +1,10 @@
 import {BookCreationDTO} from '../model/BookCreationDTO';
-import {IBookStepForm} from '../form-book-steps/model/BookStepFormDTO';
+import {Injectable} from '@angular/core';
+import {BookStepFormDTO} from '../form-book-steps/model/BookStepFormDTO';
 
+@Injectable()
 export class BookFactory {
+
 
   static createEmptyBook(): BookCreationDTO {
     return {
@@ -23,7 +26,7 @@ export class BookFactory {
   }
 
 
-  static createEmptyBookStep(): IBookStepForm {
+  static createEmptyBookStep(): BookStepFormDTO {
     return {
       productionStep: {} as any,
       status: {} as any,

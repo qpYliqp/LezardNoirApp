@@ -26,7 +26,7 @@ public class BookStep {
 
     @ManyToOne
     @JoinColumn(name = "step_id")
-    public ProductionStep step;
+    public ProductionStep productionStep;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "book_id", nullable = false)

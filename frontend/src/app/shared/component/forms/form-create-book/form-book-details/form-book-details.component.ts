@@ -1,4 +1,4 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, effect, inject, ViewChild} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 import {DatePicker} from 'primeng/datepicker';
 import {FloatLabel} from 'primeng/floatlabel';
@@ -6,9 +6,9 @@ import {ImageUpload} from '../../../image-upload/image-upload.component';
 import {InputNumber} from 'primeng/inputnumber';
 import {InputText} from 'primeng/inputtext';
 import {IBookDetailsForm} from './model/BookDetailsFormDTO';
-import {BookFormStore} from '../store/BookFormStore';
 import {IsbnValidator} from '../../directives/isbn-validator';
 import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
+import {BookFormFacadeService} from '../service/book-form-facade.service';
 
 @Component({
   selector: 'app-form-book-details',
@@ -23,7 +23,7 @@ import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
     IsbnValidator,
     NgxMaskDirective
   ],
-  providers: [BookFormStore, provideNgxMask()],
+  providers: [provideNgxMask()],
   templateUrl: './form-book-details.component.html',
   styleUrl: './form-book-details.component.css'
 })
@@ -41,16 +41,27 @@ export class FormBookDetails {
   hasSubmited: boolean = false;
 
 
-  bookFormStore = inject(BookFormStore);
+  readonly facade = inject(BookFormFacadeService);
   @ViewChild('formBookDetail') formBookDetail?: NgForm;
 
+  constructor() {
+    // Use effect to sync store changes to local form
+    effect(() => {
+      const book = this.facade.book();
+      this.bookDetail = {
+        title: book.title,
+        isbn: book.isbn,
+        price: book.price,
+        pages: book.pages,
+        date: book.releaseDate,
+        nuart: book.nuart,
+        coverFile: book.coverFile
+      };
+    });
+  }
+
   ngOnInit() {
-    const bookFromStore = this.bookFormStore.book();
-    if (bookFromStore) {
-      this.bookDetail = {...bookFromStore};
-      // this.bookDetail.title = bookFromStore.title;
-    }
-    console.log(this.bookDetail)
+    console.log(this.bookDetail);
   }
 
   onImageSelected(file: File) {
@@ -61,7 +72,15 @@ export class FormBookDetails {
     this.hasSubmited = true;
     if (this.formBookDetail && this.formBookDetail.valid) {
       this.hasSubmited = false;
-      this.bookFormStore.updateBook(this.bookDetail);
+      this.facade.updateBook({
+        title: this.bookDetail.title,
+        isbn: this.bookDetail.isbn,
+        price: this.bookDetail.price,
+        pages: this.bookDetail.pages,
+        releaseDate: this.bookDetail.date,
+        nuart: this.bookDetail.nuart,
+        coverFile: this.bookDetail.coverFile
+      });
       return true;
     }
     return false;

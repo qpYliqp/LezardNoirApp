@@ -72,4 +72,14 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
+    @PutMapping("/{bookId}")
+    public ResponseEntity<BookDTO> updateBook(
+            @PathVariable Long bookId,
+            @RequestPart("book") @Valid BookUpdateDTO book,
+            @RequestPart(value = "coverFile", required = false) MultipartFile coverFile) {
+        log.info("PUT /books/{} - Updating book: {}", bookId, book.getTitle());
+        BookDTO updatedBook = bookService.updateBook(bookId, book, coverFile);
+        return ResponseEntity.ok(updatedBook);
+    }
+
 }

@@ -1,6 +1,17 @@
 @if (book() !== null) {
   <div class="w-full h-full p-6 md:p-8 overflow-y-auto bg-primary text-white">
-    <!-- Bouton retour -->
+    <!-- Barre d'actions -->
+    <div class="flex justify-end mb-4 gap-3">
+      <button
+        pButton
+        type="button"
+        label="Modifier"
+        icon="pi pi-pencil"
+        class="p-button-raised p-button-warning"
+        (click)="openEditModal()">
+      </button>
+    </div>
+
     <!-- Contenu principal -->
     <div class="flex flex-col lg:flex-row gap-6 lg:h-[30rem]">
       <!-- Couverture -->
@@ -49,5 +60,20 @@
         <div class="flex-2  lg:block"></div>
       </div>
     </div>
+
+    <!-- Modal d'édition -->
+    <p-dialog
+      [(visible)]="showEditModal"
+      [modal]="true"
+      [style]="{ width: '95vw', height: '95vh' }"
+      [draggable]="false"
+      [resizable]="false"
+      styleClass="bg-primary"
+      [closable]="true">
+      <app-form-create-book
+        [bookToEdit]="bookToEdit"
+        (closeModal)="closeEditModal()">
+      </app-form-create-book>
+    </p-dialog>
   </div>
 }

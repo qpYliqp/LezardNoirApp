@@ -1,10 +1,10 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, effect, inject, ViewChild} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {MultiSelect} from 'primeng/multiselect';
 import {AuthorService} from '../../../../services/AuthorService/author.service';
 import {IBookAuthorsForm} from './model/BookAuthorsFormDTO';
 import {Author} from '../../../../models/Author';
-import {BookFormStore} from '../store/BookFormStore';
+import {BookFormFacadeService} from '../service/book-form-facade.service';
 
 @Component({
   selector: 'app-form-book-authors',
@@ -20,7 +20,7 @@ import {BookFormStore} from '../store/BookFormStore';
 export class FormBookAuthors {
 
   authorService = inject(AuthorService);
-  bookFormStore = inject(BookFormStore);
+  readonly facade = inject(BookFormFacadeService);
   allAuthors: Author[] = [];
   bookAuthors: IBookAuthorsForm = {
     authors: []
@@ -30,13 +30,17 @@ export class FormBookAuthors {
 
   @ViewChild('formBookAuthors') formBookAuthors?: NgForm;
 
+  constructor() {
+    effect(() => {
+      const book = this.facade.book();
+      this.bookAuthors = {
+        authors: book.authors
+      };
+    });
+  }
 
   ngOnInit() {
     this.loadAllAuthors();
-    const bookFromStore = this.bookFormStore.book();
-    if (bookFromStore) {
-      this.bookAuthors = {...bookFromStore};
-    }
   }
 
 
@@ -44,8 +48,8 @@ export class FormBookAuthors {
     this.hasSubmited = true;
     if (this.formBookAuthors && this.formBookAuthors.valid) {
       this.hasSubmited = false;
-      this.bookFormStore.updateBook(this.bookAuthors);
-      console.log(this.bookFormStore.book())
+      this.facade.updateBook(this.bookAuthors);
+      console.log(this.facade.book())
       return true;
     }
     console.log("zebizob")

@@ -1,14 +1,26 @@
-import {Component, EventEmitter, inject, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ButtonDirective} from 'primeng/button';
 import {Step, StepList, StepPanel, Stepper} from 'primeng/stepper';
 import {CommonModule} from '@angular/common';
 import {FormBookDetails} from './form-book-details/form-book-details.component';
-import {BookFormStore} from './store/BookFormStore';
 import {FormBookMarketing} from './form-book-marketing/form-book-marketing.component';
-import {BookFormService} from './service/book-form.service';
 import {FormBookAuthors} from './form-book-authors/form-book-authors.component';
 import {FormBookSteps} from './form-book-steps/form-book-steps.component';
+import {BookFormSignalStore} from './store/book-form.store';
+import {BookFormFacadeService} from './service/book-form-facade.service';
+import {BookFormApiService} from './service/book-form-api.service';
+import {BookCreationDTO} from './model/BookCreationDTO';
 
 
 @Component({
@@ -30,18 +42,19 @@ import {FormBookSteps} from './form-book-steps/form-book-steps.component';
 
   ],
   templateUrl: './form-create-book.component.html',
-  providers: [BookFormStore, BookFormService],
+  providers: [BookFormSignalStore, BookFormApiService, BookFormFacadeService],
   styleUrls: ['./form-create-book.component.css']
 })
 
 
-export class FormCreateBook implements OnInit {
+export class FormCreateBook implements OnInit, OnChanges {
+  @Input() bookToEdit?: BookCreationDTO;
   @Output() closeModal = new EventEmitter<void>();
 
   currentStep: number = 0;
 
-  bookFormStore = inject(BookFormStore);
-  bookFormService = inject(BookFormService);
+  // Using the new facade service
+  readonly facade = inject(BookFormFacadeService);
 
 
   @ViewChild(FormBookDetails) formBookDetail?: FormBookDetails;
@@ -72,9 +85,7 @@ export class FormCreateBook implements OnInit {
 
       case 3:
         if (this.formBookSteps?.onSubmit()) {
-          console.log("not normal")
-          this.bookFormService.createBook(this.bookFormStore.book());
-          this.closeBookForm();
+          this.submitForm();
         }
         break;
 
@@ -90,12 +101,43 @@ export class FormCreateBook implements OnInit {
   }
 
   closeBookForm() {
-    this.bookFormStore.resetBook();
+    this.facade.reset();
     this.closeModal.emit();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    // React to changes in bookToEdit input
+    if (changes['bookToEdit']) {
+      if (this.bookToEdit) {
+        console.log('Initializing for edit with:', this.bookToEdit);
+        this.facade.initializeForEdit(this.bookToEdit);
+      }
+    }
+  }
 
   ngOnInit() {
+    // Initialize the form based on whether we're editing or creating
+    if (this.bookToEdit) {
+      console.log('ngOnInit - Initializing for edit with:', this.bookToEdit);
+      this.facade.initializeForEdit(this.bookToEdit);
+    } else {
+      console.log('ngOnInit - Initializing for create');
+      this.facade.initializeForCreate();
+    }
+  }
 
+  private submitForm(): void {
+    console.log("submit");
+    this.facade.submit().subscribe({
+      next: (book) => {
+        console.log(`Book ${this.facade.mode()} successful:`, book);
+        this.closeBookForm();
+      },
+      error: (error) => {
+        console.error(`Book ${this.facade.mode()} failed:`, error);
+        // Error is already handled in the facade, but we can show a toast here
+      }
+    });
+    console.log("zebizz");
   }
 }

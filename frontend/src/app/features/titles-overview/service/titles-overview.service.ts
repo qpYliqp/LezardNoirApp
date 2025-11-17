@@ -60,6 +60,13 @@ export class TitlesOverviewService {
     next.sort((a, b) => a.title.localeCompare(b.title));
     this.allBooksSignal.set(next);
   }
+
+  updateBook(book: Book): void {
+    if (!book || !book.title?.trim()) return;
+    const next = this.allBooks().map(b => (equalsId(b, book) ? book : b));
+    next.sort((a, b) => a.title.localeCompare(b.title));
+    this.allBooksSignal.set(next);
+  }
 }
 
 function firstLetterKey(raw: string | undefined | null): string {

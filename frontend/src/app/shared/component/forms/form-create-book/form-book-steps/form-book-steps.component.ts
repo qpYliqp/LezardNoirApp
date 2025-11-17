@@ -4,12 +4,12 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {ProductionStep} from '../../../../models/ProductionStep';
 import {StatusService} from '../../../../services/StatusService/status.service';
 import {Status} from '../../../../models/Status';
-import {IBookStepForm} from './model/BookStepFormDTO';
-import {forkJoin} from 'rxjs';
 import {Select} from 'primeng/select';
 import {DatePicker} from 'primeng/datepicker';
 import {FloatLabel} from 'primeng/floatlabel';
-import {BookFormStore} from '../store/BookFormStore';
+import {BookFormFacadeService} from '../service/book-form-facade.service';
+import {BookStepFormDTO} from './model/BookStepFormDTO';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-form-book-steps',
@@ -27,13 +27,13 @@ export class FormBookSteps {
 
   productionStepService = inject(ProductionStepService);
   statusService = inject(StatusService);
-  bookFormStore = inject(BookFormStore);
+  readonly facade = inject(BookFormFacadeService);
 
 
   allProductionSteps: ProductionStep[] = [];
   allStatus: Status[] = [];
 
-  bookStepsDTO: IBookStepForm[] = [];
+  bookStepsDTO: BookStepFormDTO[] = [];
   hasSubmited: boolean = false;
 
   @ViewChild('formBookSteps') formBookSteps?: NgForm;
@@ -46,24 +46,29 @@ export class FormBookSteps {
       this.allProductionSteps = steps;
       this.allStatus = statuses;
 
-      this.bookStepsDTO = steps.map(step => ({
-        productionStep: step,
-        status: statuses[0],
-        endDate: null
-      }));
+      const existingBookSteps = this.facade.book().bookSteps;
 
-      console.log("Book steps initialized:", this.bookStepsDTO);
+      if (existingBookSteps && existingBookSteps.length > 0) {
+        this.bookStepsDTO = existingBookSteps.map(s => ({
+          ...s,
+          endDate: s.endDate ? new Date(s.endDate) : null
+        }));
+      } else {
+        this.bookStepsDTO = steps.map(step => ({
+          productionStep: step,
+          status: statuses[0],
+          endDate: null
+        }));
+      }
+
     });
   }
 
 
   public onSubmit(): boolean {
-    console.log("submit")
     this.hasSubmited = true;
     if (this.formBookSteps && this.formBookSteps.valid) {
-      this.bookFormStore.updateBook({
-        bookSteps: this.bookStepsDTO
-      });
+      this.facade.updateBook({bookSteps: this.bookStepsDTO})
       this.hasSubmited = false;
       return true;
     }
