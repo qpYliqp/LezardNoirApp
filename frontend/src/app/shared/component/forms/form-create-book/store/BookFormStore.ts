@@ -3,6 +3,7 @@ import {BookCreationDTO} from '../model/BookCreationDTO';
 import {inject, Injectable} from '@angular/core';
 import {tap} from 'rxjs';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {BookFactory} from '../factories/book.factory';
 
 export class UpdateBook {
   static readonly type = '[BookCreationForm] Update Book';
@@ -20,7 +21,7 @@ export interface CreateBookState {
 }
 
 const initialState: CreateBookState = {
-  book: new BookCreationDTO(),
+  book: BookFactory.createEmptyBook(),
 };
 
 @Injectable()
@@ -30,11 +31,10 @@ const initialState: CreateBookState = {
 })
 export class BookFormState {
 
-
   @Selector()
   static book(state: CreateBookState): BookCreationDTO {
     if (!state || !state.book) {
-      return new BookCreationDTO(); // Return default value
+      return BookFactory.createEmptyBook();
     }
     return state.book;
   }
@@ -42,7 +42,7 @@ export class BookFormState {
   @Action(UpdateBook)
   updateBook(ctx: StateContext<CreateBookState>, action: UpdateBook) {
     const currentBook = ctx.getState().book;
-    console.log("tg", action.updates)
+    console.log("Updating book with:", action.updates);
     ctx.patchState({
       book: {
         ...currentBook,
@@ -53,9 +53,10 @@ export class BookFormState {
 
   @Action(ResetBook)
   resetBook(ctx: StateContext<CreateBookState>) {
-    ctx.setState(initialState);
+    ctx.setState({
+      book: BookFactory.createEmptyBook()
+    });
   }
-
 }
 
 @Injectable()
@@ -64,9 +65,9 @@ export class BookFormStore {
 
   readonly book = toSignal(
     this.store.select(BookFormState.book).pipe(
-      tap(b => console.log("NGXS a émis :", b)) // 👈 test
+      tap(b => console.log("Book state changed:", b))
     ),
-    {initialValue: new BookCreationDTO()}
+    {initialValue: BookFactory.createEmptyBook()}
   );
 
   updateBook(updates: Partial<BookCreationDTO>) {

@@ -4,7 +4,7 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {ProductionStep} from '../../../../models/ProductionStep';
 import {StatusService} from '../../../../services/StatusService/status.service';
 import {Status} from '../../../../models/Status';
-import {BookStepFormDTO} from './model/BookStepFormDTO';
+import {IBookStepForm} from './model/BookStepFormDTO';
 import {forkJoin} from 'rxjs';
 import {Select} from 'primeng/select';
 import {DatePicker} from 'primeng/datepicker';
@@ -33,19 +33,12 @@ export class FormBookSteps {
   allProductionSteps: ProductionStep[] = [];
   allStatus: Status[] = [];
 
-  bookStepsDTO: BookStepFormDTO[] = [];
+  bookStepsDTO: IBookStepForm[] = [];
   hasSubmited: boolean = false;
 
   @ViewChild('formBookSteps') formBookSteps?: NgForm;
 
-  p = new ProductionStep();
-
-
   ngOnInit() {
-    this.p.id = 5;
-    this.p.name = "LOL";
-
-
     forkJoin({
       steps: this.productionStepService.getAllProductionStep(),
       statuses: this.statusService.getAllStatus()
@@ -53,19 +46,14 @@ export class FormBookSteps {
       this.allProductionSteps = steps;
       this.allStatus = statuses;
 
-      this.bookStepsDTO = steps.map(step => {
-        const b = new BookStepFormDTO();
-        b.productionStep = step;
-        b.status = statuses[0];
-        b.releaseDate = null;
-        return b;
-      });
+      this.bookStepsDTO = steps.map(step => ({
+        productionStep: step,
+        status: statuses[0],
+        endDate: null
+      }));
 
-
+      console.log("Book steps initialized:", this.bookStepsDTO);
     });
-
-
-    console.log("ggg,", this.bookStepsDTO)
   }
 
 

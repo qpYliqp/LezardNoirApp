@@ -3,7 +3,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ButtonDirective} from 'primeng/button';
 import {Step, StepList, StepPanel, Stepper} from 'primeng/stepper';
 import {CommonModule} from '@angular/common';
-import {BookCreationDTO} from './model/BookCreationDTO';
 import {FormBookDetails} from './form-book-details/form-book-details.component';
 import {BookFormStore} from './store/BookFormStore';
 import {FormBookMarketing} from './form-book-marketing/form-book-marketing.component';
@@ -41,7 +40,6 @@ export class FormCreateBook implements OnInit {
 
   currentStep: number = 0;
 
-  book: BookCreationDTO = new BookCreationDTO();
   bookFormStore = inject(BookFormStore);
   bookFormService = inject(BookFormService);
 

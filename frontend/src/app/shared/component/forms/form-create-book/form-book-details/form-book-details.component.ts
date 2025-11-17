@@ -5,7 +5,7 @@ import {FloatLabel} from 'primeng/floatlabel';
 import {ImageUpload} from '../../../image-upload/image-upload.component';
 import {InputNumber} from 'primeng/inputnumber';
 import {InputText} from 'primeng/inputtext';
-import {BookDetailsFormDTO} from './model/BookDetailsFormDTO';
+import {IBookDetailsForm} from './model/BookDetailsFormDTO';
 import {BookFormStore} from '../store/BookFormStore';
 import {IsbnValidator} from '../../directives/isbn-validator';
 import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
@@ -29,7 +29,15 @@ import {NgxMaskDirective, provideNgxMask} from 'ngx-mask';
 })
 export class FormBookDetails {
 
-  bookDetail: BookDetailsFormDTO = new BookDetailsFormDTO();
+  bookDetail: IBookDetailsForm = {
+    title: null,
+    isbn: null,
+    price: null,
+    pages: null,
+    date: null,
+    nuart: null,
+    coverFile: null
+  };
   hasSubmited: boolean = false;
 
 

@@ -1,11 +1,9 @@
-export class BookDetailsFormDTO {
-
-  title: string | null = null;
-  isbn: string | null = null;
-  price: number | null = null;
-  pages: number | null = null;
-  date: Date | null = null;
-  nuart: string | null = null;
-  coverFile: File | null = null;
-
+export interface IBookDetailsForm {
+  title: string | null;
+  isbn: string | null;
+  price: number | null;
+  pages: number | null;
+  date: Date | null;
+  nuart: string | null;
+  coverFile: File | null;
 }

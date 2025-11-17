@@ -1,8 +1,11 @@
 import {ProductionStep} from '../../../../../models/ProductionStep';
 import {Status} from '../../../../../models/Status';
 
-export class BookStepFormDTO {
-  productionStep!: ProductionStep;
-  status!: Status;
-  releaseDate!: Date | null;
+export interface IBookStepForm {
+  productionStep: ProductionStep;
+  status: Status;
+  endDate: Date | null;
 }
+
+// Alias for backward compatibility
+export type BookStepFormDTO = IBookStepForm;

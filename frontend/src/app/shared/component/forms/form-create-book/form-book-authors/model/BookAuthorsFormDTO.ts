@@ -1,6 +1,5 @@
 import {Author} from '../../../../../models/Author';
 
-export class BookAuthorsFormDTO {
-  authors: Author[] | null = null;
-
+export interface IBookAuthorsForm {
+  authors: Author[];
 }

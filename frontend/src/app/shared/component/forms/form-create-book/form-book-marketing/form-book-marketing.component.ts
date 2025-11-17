@@ -1,7 +1,7 @@
 import {Component, inject, ViewChild} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {FloatLabel} from 'primeng/floatlabel';
-import {BookMarketingFormDTO} from './model/BookMarketingFormDTO';
+import {IBookMarketingForm} from './model/BookMarketingFormDTO';
 import {BookFormStore} from '../store/BookFormStore';
 import {Textarea} from 'primeng/textarea';
 
@@ -18,7 +18,12 @@ import {Textarea} from 'primeng/textarea';
 })
 export class FormBookMarketing {
 
-  bookMarketing: BookMarketingFormDTO = new BookMarketingFormDTO();
+  bookMarketing: IBookMarketingForm = {
+    hook: null,
+    marketing: null,
+    summary: null,
+    note: null
+  };
   bookFormStore = inject(BookFormStore);
   hasSubmited: boolean = false;
 

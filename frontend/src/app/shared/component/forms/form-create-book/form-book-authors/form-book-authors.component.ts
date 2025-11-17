@@ -2,7 +2,7 @@ import {Component, inject, ViewChild} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {MultiSelect} from 'primeng/multiselect';
 import {AuthorService} from '../../../../services/AuthorService/author.service';
-import {BookAuthorsFormDTO} from './model/BookAuthorsFormDTO';
+import {IBookAuthorsForm} from './model/BookAuthorsFormDTO';
 import {Author} from '../../../../models/Author';
 import {BookFormStore} from '../store/BookFormStore';
 
@@ -22,7 +22,9 @@ export class FormBookAuthors {
   authorService = inject(AuthorService);
   bookFormStore = inject(BookFormStore);
   allAuthors: Author[] = [];
-  bookAuthors = new BookAuthorsFormDTO();
+  bookAuthors: IBookAuthorsForm = {
+    authors: []
+  };
   hasSubmited: boolean = false;
 
 

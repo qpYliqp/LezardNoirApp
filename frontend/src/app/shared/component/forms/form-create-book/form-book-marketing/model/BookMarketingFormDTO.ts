@@ -1,8 +1,6 @@
-export class BookMarketingFormDTO {
-  hook: string | null = null
-  marketing: string | null = null;
-  summary: string | null = null;
-  note: string | null = null;
-
-
+export interface IBookMarketingForm {
+  hook: string | null;
+  marketing: string | null;
+  summary: string | null;
+  note: string | null;
 }
