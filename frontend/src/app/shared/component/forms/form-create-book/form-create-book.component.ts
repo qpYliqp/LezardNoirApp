@@ -53,7 +53,6 @@ export class FormCreateBook implements OnInit, OnChanges {
 
   currentStep: number = 0;
 
-  // Using the new facade service
   readonly facade = inject(BookFormFacadeService);
 
 
@@ -106,7 +105,6 @@ export class FormCreateBook implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // React to changes in bookToEdit input
     if (changes['bookToEdit']) {
       if (this.bookToEdit) {
         console.log('Initializing for edit with:', this.bookToEdit);
@@ -116,7 +114,6 @@ export class FormCreateBook implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    // Initialize the form based on whether we're editing or creating
     if (this.bookToEdit) {
       console.log('ngOnInit - Initializing for edit with:', this.bookToEdit);
       this.facade.initializeForEdit(this.bookToEdit);
@@ -135,9 +132,7 @@ export class FormCreateBook implements OnInit, OnChanges {
       },
       error: (error) => {
         console.error(`Book ${this.facade.mode()} failed:`, error);
-        // Error is already handled in the facade, but we can show a toast here
       }
     });
-    console.log("zebizz");
   }
 }

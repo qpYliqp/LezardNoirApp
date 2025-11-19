@@ -20,8 +20,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
-    private float price;
-    private int pages;
+    private Float price;
+    private Integer pages;
     private String isbn;
     private String nuart;
     private String note;
@@ -35,11 +35,14 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private Set<Author> authors = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private Status globalStatus;
+
     @Column(name = "cover_filename")
     private String coverFileName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

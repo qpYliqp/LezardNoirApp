@@ -3,7 +3,7 @@ export interface IBookDetailsForm {
   isbn: string | null;
   price: number | null;
   pages: number | null;
-  date: Date | null;
+  releaseDate: Date | null;
   nuart: string | null;
   coverFile: File | null;
 }

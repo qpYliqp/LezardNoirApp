@@ -34,7 +34,7 @@ export class FormBookDetails {
     isbn: null,
     price: null,
     pages: null,
-    date: null,
+    releaseDate: null,
     nuart: null,
     coverFile: null
   };
@@ -53,7 +53,7 @@ export class FormBookDetails {
         isbn: book.isbn,
         price: book.price,
         pages: book.pages,
-        date: book.releaseDate,
+        releaseDate: book.releaseDate,
         nuart: book.nuart,
         coverFile: book.coverFile
       };
@@ -77,7 +77,7 @@ export class FormBookDetails {
         isbn: this.bookDetail.isbn,
         price: this.bookDetail.price,
         pages: this.bookDetail.pages,
-        releaseDate: this.bookDetail.date,
+        releaseDate: this.bookDetail.releaseDate,
         nuart: this.bookDetail.nuart,
         coverFile: this.bookDetail.coverFile
       });

@@ -1,6 +1,9 @@
 package app.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +20,10 @@ public class BookUpdateDTO {
     private String title;
 
     @Positive(message = "Price must be positive")
-    private float price;
+    private Float price;
 
     @Min(value = 1, message = "Pages must be at least 1")
-    private int pages;
+    private Integer pages;
 
     private String isbn;
     private String nuart;
@@ -28,8 +31,7 @@ public class BookUpdateDTO {
     private String summary;
     private String hook;
     private String marketing;
-    private StatusDTO globalStatus;
     private Set<AuthorDTO> authors;
     private LocalDate releaseDate;
-    private Set<BookStepCreationDTO> bookSteps;
+    private Set<BookStepDTO> bookSteps;
 }

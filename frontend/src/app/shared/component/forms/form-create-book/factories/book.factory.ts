@@ -19,7 +19,6 @@ export class BookFactory {
       marketing: "null",
       note: "null",
       coverFile: null,
-      date: null,
       authors: [],
       bookSteps: []
     };
@@ -44,6 +43,7 @@ export class BookFactory {
 
 
   static cloneBook(book: BookCreationDTO): BookCreationDTO {
+    console.log('cloning BookCreation :', book);
     return {
       ...book,
       authors: book.authors ? [...book.authors] : [],

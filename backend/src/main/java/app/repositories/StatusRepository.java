@@ -9,4 +9,9 @@ public interface StatusRepository extends CrudRepository<Status, Long> {
 
     @Override
     List<Status> findAll();
+
+    @Override
+    List<Status> findAllById(Iterable<Long> ids);
+
+
 }

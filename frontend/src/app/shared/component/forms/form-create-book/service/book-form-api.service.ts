@@ -45,7 +45,9 @@ export class BookFormApiService {
    * @returns Observable<Book> - Updated book from server
    */
   updateBook(bookId: number, book: BookCreationDTO): Observable<Book> {
+
     const formData = this.buildFormData(book);
+    console.log(`bbbbbb : ${formData}`);
 
     return this.http.put<Book>(`${this.apiUrl}/${bookId}`, formData).pipe(
       tap(updatedBook => {
@@ -67,11 +69,10 @@ export class BookFormApiService {
     // Clone the book and transform dates to ISO strings
     const bookData = {
       ...book,
-      releaseDate: book.releaseDate ? book.releaseDate.toISOString() : null,
-      date: book.date ? book.date.toISOString() : null,
+      releaseDate: book.releaseDate ? book.releaseDate : null,
       bookSteps: book.bookSteps.map(step => ({
         ...step,
-        endDate: step.endDate ? step.endDate.toISOString() : null
+        endDate: step.endDate ? step.endDate : null
       }))
     };
 

@@ -15,7 +15,7 @@ public class BookStep {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    public Long id;
 
     @Column(name = "end_date")
     public LocalDate endDate;

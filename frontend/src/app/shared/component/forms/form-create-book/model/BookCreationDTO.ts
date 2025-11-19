@@ -14,7 +14,6 @@ export interface BookCreationDTO {
   marketing: string | null;
   note: string | null;
   coverFile: File | null;
-  date: Date | null;
   authors: Author[];
   bookSteps: BookStepFormDTO[];
 }

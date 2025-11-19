@@ -1,15 +1,14 @@
 package app.services;
 
-import app.dto.AuthorDTO;
 import app.dto.BookDTO;
-import app.dto.BookStepCreationDTO;
 import app.dto.BookUpdateDTO;
 import app.exceptions.AuthorException;
 import app.exceptions.BookException;
-import app.exceptions.ProductionStepException;
 import app.exceptions.StatusException;
 import app.mappers.BookMapper;
-import app.models.*;
+import app.models.Author;
+import app.models.Book;
+import app.models.Status;
 import app.repositories.*;
 import app.repositories.specifications.BookSpecification;
 import org.slf4j.Logger;
@@ -21,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -41,13 +38,23 @@ public class BookService {
 
     private final MinioService minioService;
 
-    public BookService(final BookRepository bookRepository, final AuthorRepository authorRepository, final StatusRepository statusRepository, final BookStepRepository bookStepRepository, final ProductionStepRepository productionStepRepository, final MinioService minioService) {
+    private final BookUpdateService bookUpdateService;
+
+    public BookService(final BookRepository bookRepository,
+                       final AuthorRepository authorRepository,
+                       final StatusRepository statusRepository,
+                       final BookStepRepository bookStepRepository,
+                       final ProductionStepRepository productionStepRepository,
+                       final MinioService minioService,
+                       final BookUpdateService bookUpdateService) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.statusRepository = statusRepository;
         this.bookStepRepository = bookStepRepository;
         this.productionStepRepository = productionStepRepository;
         this.minioService = minioService;
+        this.bookUpdateService = bookUpdateService;
+
     }
 
     @Transactional(readOnly = true)
@@ -139,137 +146,32 @@ public class BookService {
     @Transactional
     public BookDTO createBook(BookUpdateDTO dto, MultipartFile coverFile) {
         log.info("Creating new book: {}", dto.getTitle());
-        Book book = BookMapper.INSTANCE.fromupdateDTOtoEntity(dto);
-
-        // Handle cover file upload
-        if (coverFile != null && !coverFile.isEmpty()) {
-            try {
-                log.debug("Uploading cover file for book: {}", dto.getTitle());
-                String newCoverFileName = this.minioService.updateCover(book.getCoverFileName(), coverFile);
-                book.setCoverFileName(newCoverFileName);
-            } catch (Exception e) {
-                log.error("Failed to upload cover file for book: {}", dto.getTitle(), e);
-                throw new RuntimeException("Failed to upload cover file: " + e.getMessage());
-            }
-        }
-
-        // Associate authors
-        if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
-            Set<Long> authorIds = dto.getAuthors().stream()
-                    .map(AuthorDTO::getId)
-                    .collect(Collectors.toSet());
-
-            log.debug("Associating {} authors with book", authorIds.size());
-            List<Author> managedAuthors = (List<Author>) authorRepository.findAllById(authorIds);
-            managedAuthors.forEach(book::addAuthor);
-        }
-
-        // Save book first to get the ID
+        Book book = new Book();
+        this.bookUpdateService.updateBookDetails(dto, book);
+        this.bookUpdateService.updateBookMarketing(dto, book);
+        this.bookUpdateService.updateBookCover(book, coverFile);
+        this.bookUpdateService.updateBookAuthors(dto, book);
         Book savedBook = bookRepository.save(book);
-        log.info("Successfully created book: {} (ID: {})", savedBook.getTitle(), savedBook.getId());
-
-        // Associate book steps
-        if (dto.getBookSteps() != null && !dto.getBookSteps().isEmpty()) {
-            log.debug("Creating {} book steps for book {}", dto.getBookSteps().size(), savedBook.getTitle());
-            for (BookStepCreationDTO stepDTO : dto.getBookSteps()) {
-                BookStep bookStep = createBookStepFromDTO(stepDTO, savedBook);
-                bookStepRepository.save(bookStep);
-            }
-        }
-
+        this.bookUpdateService.createBookSteps(dto, savedBook);
         return mapToBookDTOWithUrl(savedBook);
     }
 
     @Transactional
     public BookDTO updateBook(Long bookId, BookUpdateDTO dto, MultipartFile coverFile) {
-        log.info("Updating book with ID: {}", bookId);
 
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> {
-                    log.error("Book not found with ID: {}", bookId);
-                    return new BookException("Book not found with bookId: " + bookId);
-                });
+        Book b = this.bookRepository.findById(bookId).orElseThrow(
+                () -> new BookException("Book not found with ID: " + bookId)
+        );
 
-        // Update basic fields
-        book.setTitle(dto.getTitle());
-        book.setPrice(dto.getPrice());
-        book.setPages(dto.getPages());
-        book.setIsbn(dto.getIsbn());
-        book.setNuart(dto.getNuart());
-        book.setNote(dto.getNote());
-        book.setSummary(dto.getSummary());
-        book.setHook(dto.getHook());
-        book.setMarketing(dto.getMarketing());
-        book.setReleaseDate(dto.getReleaseDate());
+        this.bookUpdateService.updateBookDetails(dto, b);
+        this.bookUpdateService.updateBookMarketing(dto, b);
+        this.bookUpdateService.updateBookCover(b, coverFile);
+        this.bookUpdateService.updateBookAuthors(dto, b);
+        this.bookUpdateService.updateBookSteps(dto, b);
+        return this.mapToBookDTOWithUrl(b);
 
-        // Handle cover file upload
-        if (coverFile != null && !coverFile.isEmpty()) {
-            try {
-                log.debug("Uploading new cover file for book: {}", dto.getTitle());
-                String newCoverFileName = this.minioService.updateCover(book.getCoverFileName(), coverFile);
-                book.setCoverFileName(newCoverFileName);
-            } catch (Exception e) {
-                log.error("Failed to upload cover file for book: {}", dto.getTitle(), e);
-                throw new RuntimeException("Failed to upload cover file: " + e.getMessage());
-            }
-        }
-
-        // Update global status
-        if (dto.getGlobalStatus() != null && dto.getGlobalStatus().getId() != null) {
-            Status status = statusRepository.findById(dto.getGlobalStatus().getId())
-                    .orElseThrow(() -> new StatusException("Status not found with id: " + dto.getGlobalStatus().getId()));
-            book.setGlobalStatus(status);
-        }
-
-        // Update authors - clear and reassociate
-        book.getAuthors().clear();
-        if (dto.getAuthors() != null && !dto.getAuthors().isEmpty()) {
-            Set<Long> authorIds = dto.getAuthors().stream()
-                    .map(AuthorDTO::getId)
-                    .collect(Collectors.toSet());
-
-            log.debug("Associating {} authors with book", authorIds.size());
-            List<Author> managedAuthors = (List<Author>) authorRepository.findAllById(authorIds);
-            managedAuthors.forEach(book::addAuthor);
-        }
-
-        // Update book steps - remove old ones and add new ones
-        book.getBookSteps().clear();
-        if (dto.getBookSteps() != null && !dto.getBookSteps().isEmpty()) {
-            log.debug("Updating {} book steps for book {}", dto.getBookSteps().size(), book.getTitle());
-            for (BookStepCreationDTO stepDTO : dto.getBookSteps()) {
-                BookStep bookStep = createBookStepFromDTO(stepDTO, book);
-                book.getBookSteps().add(bookStep);
-            }
-        }
-
-        Book updatedBook = bookRepository.save(book);
-        log.info("Successfully updated book: {} (ID: {})", updatedBook.getTitle(), updatedBook.getId());
-
-        return mapToBookDTOWithUrl(updatedBook);
     }
 
-    private BookStep createBookStepFromDTO(BookStepCreationDTO dto, Book book) {
-        BookStep bookStep = new BookStep();
-        bookStep.setBook(book);
-        bookStep.setEndDate(dto.getEndDate());
-
-        // Fetch and set ProductionStep
-        if (dto.getProductionStep() != null && dto.getProductionStep().getId() != null) {
-            ProductionStep productionStep = productionStepRepository.findById(dto.getProductionStep().getId())
-                    .orElseThrow(() -> new ProductionStepException("ProductionStep not found with id: " + dto.getProductionStep().getId()));
-            bookStep.setProductionStep(productionStep);
-        }
-
-        // Fetch and set Status
-        if (dto.getStatus() != null && dto.getStatus().getId() != null) {
-            Status status = statusRepository.findById(dto.getStatus().getId())
-                    .orElseThrow(() -> new StatusException("Status not found with id: " + dto.getStatus().getId()));
-            bookStep.setStatus(status);
-        }
-
-        return bookStep;
-    }
 
     public BookDTO mapToBookDTOWithUrl(Book book) {
         BookDTO dto = BookMapper.INSTANCE.toDTO(book);

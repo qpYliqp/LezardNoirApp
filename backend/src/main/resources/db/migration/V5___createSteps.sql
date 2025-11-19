@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS book_step
 (
     id BIGSERIAL PRIMARY KEY,
     end_date Date,
-    book_id BIGINT NOT NULL REFERENCES book(id) ON DELETE CASCADE,
-    step_id BIGINT NOT NULL REFERENCES production_step(id),
-    status_id BIGINT NOT NULL REFERENCES status(id),
+    book_id BIGINT  REFERENCES book(id) ON DELETE CASCADE,
+    step_id BIGINT  REFERENCES production_step(id),
+    status_id BIGINT  REFERENCES status(id),
 
     CONSTRAINT uk_book_step UNIQUE (book_id, step_id)
 );

@@ -10,4 +10,7 @@ public interface ProductionStepRepository extends CrudRepository<ProductionStep,
 
     @NonNull
     List<ProductionStep> findAll();
+
+    @Override
+    List<ProductionStep> findAllById(Iterable<Long> ids);
 }
