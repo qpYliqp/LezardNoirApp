@@ -24,7 +24,7 @@ public class BookDTO {
     private Set<AuthorDTO> authors;
     private String coverFileName;
     private String coverUrl;
-    private AuthorDTO author;
     private LocalDate releaseDate;
+    private Set<BookStepDTO> bookSteps;
 
 }

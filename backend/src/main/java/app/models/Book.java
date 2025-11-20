@@ -13,29 +13,21 @@ import java.util.Set;
 @Entity
 public class Book {
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<BookStep> bookSteps = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String title;
-
-    private float price;
-
-    private int pages;
-
+    private Float price;
+    private Integer pages;
     private String isbn;
-
     private String nuart;
-
     private String note;
-
     private String summary;
-
     private String hook;
-
     private String marketing;
-
-
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "book_author",
@@ -54,7 +46,6 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
