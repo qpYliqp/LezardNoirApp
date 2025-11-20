@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean compile:*)",
+      "Bash(git restore:*)",
+      "Bash(cat:*)",
+      "Bash(mvn compile:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

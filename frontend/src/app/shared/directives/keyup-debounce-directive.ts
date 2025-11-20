@@ -11,7 +11,6 @@ export class KeyuDebouncepDirective extends AbstractDebounceDirective {
 
   @HostListener("keyup", ["$event"])
   public onKeyUp(event: any): void {
-    console.log("key upded");
     event.preventDefault();
     this.emitEvent$.next(event);
   }

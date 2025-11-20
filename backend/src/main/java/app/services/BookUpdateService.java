@@ -4,8 +4,6 @@ import app.dto.AuthorDTO;
 import app.dto.BookStepDTO;
 import app.dto.BookUpdateDTO;
 import app.exceptions.AuthorException;
-import app.exceptions.ProductionStepException;
-import app.exceptions.StatusException;
 import app.models.*;
 import app.repositories.AuthorRepository;
 import app.repositories.BookStepRepository;
@@ -127,31 +125,40 @@ public class BookUpdateService {
 
     @Transactional
     public void createBookSteps(BookUpdateDTO dto, Book book) {
-        if (dto.getBookSteps() != null && !dto.getBookSteps().isEmpty()) {
-            for (BookStepDTO stepDTO : dto.getBookSteps()) {
-                BookStep bookStep = createBookStepFromDTO(stepDTO, book);
-                bookStepRepository.save(bookStep);
-            }
-        }
-    }
-
-    private BookStep createBookStepFromDTO(BookStepDTO dto, Book book) {
-        BookStep bookStep = new BookStep();
-        bookStep.setBook(book);
-        bookStep.setEndDate(dto.getEndDate());
-
-        if (dto.getProductionStep() != null && dto.getProductionStep().getId() != null) {
-            ProductionStep productionStep = productionStepRepository.findById(dto.getProductionStep().getId())
-                    .orElseThrow(() -> new ProductionStepException("ProductionStep not found with id: " + dto.getProductionStep().getId()));
-            bookStep.setProductionStep(productionStep);
+        if (dto.getBookSteps() == null || dto.getBookSteps().isEmpty()) {
+            return;
         }
 
-        if (dto.getStatus() != null && dto.getStatus().getId() != null) {
-            Status status = statusRepository.findById(dto.getStatus().getId())
-                    .orElseThrow(() -> new StatusException("Status not found with id: " + dto.getStatus().getId()));
-            bookStep.setStatus(status);
-        }
+        Map<Long, BookStepDTO> dtoMap = dto.getBookSteps().stream()
+                .collect(Collectors.toMap(BookStepDTO::getId, Function.identity()));
 
-        return bookStep;
+        Set<Long> statusIds = dto.getBookSteps().stream()
+                .map(step -> step.getStatus().getId())
+                .collect(Collectors.toSet());
+
+        Set<Long> productionStepIds = dto.getBookSteps().stream()
+                .map(step -> step.getProductionStep().getId())
+                .collect(Collectors.toSet());
+
+        Map<Long, Status> statusMap = this.statusRepository.findAllById(statusIds)
+                .stream()
+                .collect(Collectors.toMap(Status::getId, Function.identity()));
+
+        Map<Long, ProductionStep> productionStepMap = this.productionStepRepository.findAllById(productionStepIds)
+                .stream()
+                .collect(Collectors.toMap(ProductionStep::getId, Function.identity()));
+
+        List<BookStep> bookSteps = dtoMap.values().stream()
+                .map(bookStepDTO -> {
+                    BookStep bookStep = new BookStep();
+                    bookStep.setBook(book);
+                    bookStep.setEndDate(bookStepDTO.getEndDate());
+                    bookStep.setStatus(statusMap.get(bookStepDTO.getStatus().getId()));
+                    bookStep.setProductionStep(productionStepMap.get(bookStepDTO.getProductionStep().getId()));
+                    return bookStep;
+                })
+                .collect(Collectors.toList());
+
+        this.bookStepRepository.saveAll(bookSteps);
     }
 }

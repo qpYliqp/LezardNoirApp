@@ -43,7 +43,6 @@ export class BookFactory {
 
 
   static cloneBook(book: BookCreationDTO): BookCreationDTO {
-    console.log('cloning BookCreation :', book);
     return {
       ...book,
       authors: book.authors ? [...book.authors] : [],

@@ -19,7 +19,7 @@ import {FormBookAuthors} from './form-book-authors/form-book-authors.component';
 import {FormBookSteps} from './form-book-steps/form-book-steps.component';
 import {BookFormSignalStore} from './store/book-form.store';
 import {BookFormFacadeService} from './service/book-form-facade.service';
-import {BookFormApiService} from './service/book-form-api.service';
+import {BookFormService} from './service/book-form.service';
 import {BookCreationDTO} from './model/BookCreationDTO';
 
 
@@ -42,7 +42,7 @@ import {BookCreationDTO} from './model/BookCreationDTO';
 
   ],
   templateUrl: './form-create-book.component.html',
-  providers: [BookFormSignalStore, BookFormApiService, BookFormFacadeService],
+  providers: [BookFormSignalStore, BookFormService, BookFormFacadeService],
   styleUrls: ['./form-create-book.component.css']
 })
 
@@ -107,7 +107,6 @@ export class FormCreateBook implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['bookToEdit']) {
       if (this.bookToEdit) {
-        console.log('Initializing for edit with:', this.bookToEdit);
         this.facade.initializeForEdit(this.bookToEdit);
       }
     }
@@ -115,19 +114,15 @@ export class FormCreateBook implements OnInit, OnChanges {
 
   ngOnInit() {
     if (this.bookToEdit) {
-      console.log('ngOnInit - Initializing for edit with:', this.bookToEdit);
       this.facade.initializeForEdit(this.bookToEdit);
     } else {
-      console.log('ngOnInit - Initializing for create');
       this.facade.initializeForCreate();
     }
   }
 
   private submitForm(): void {
-    console.log("submit");
     this.facade.submit().subscribe({
       next: (book) => {
-        console.log(`Book ${this.facade.mode()} successful:`, book);
         this.closeBookForm();
       },
       error: (error) => {

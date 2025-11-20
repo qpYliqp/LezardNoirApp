@@ -49,7 +49,6 @@ export class FormBookSteps {
       const existingBookSteps = this.facade.book().bookSteps;
 
       if (existingBookSteps && existingBookSteps.length > 0) {
-        console.log(`what are existingBookSteps ? ${existingBookSteps[0].endDate}`)
         this.bookStepsDTO = existingBookSteps.map(s => ({
           ...s,
           endDate: s.endDate ? new Date(s.endDate) : null

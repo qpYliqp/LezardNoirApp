@@ -38,9 +38,7 @@ export class BookView {
       }
     });
 
-    effect(() => {
-      console.log(this.book())
-    });
+
   }
 
   ngOnInit() {
@@ -50,10 +48,8 @@ export class BookView {
 
   openEditModal(): void {
     const currentBook = this.book();
-    console.log('openEditModal - current book:', currentBook);
     if (currentBook) {
       this.bookToEdit = this.convertBookToDTO(currentBook);
-      console.log('openEditModal - bookToEdit after conversion:', this.bookToEdit);
       this.isEditing = true;
     }
   }

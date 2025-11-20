@@ -49,10 +49,8 @@ export class FormBookAuthors {
     if (this.formBookAuthors && this.formBookAuthors.valid) {
       this.hasSubmited = false;
       this.facade.updateBook(this.bookAuthors);
-      console.log(this.facade.book())
       return true;
     }
-    console.log("zebizob")
     return false;
   }
 
@@ -65,7 +63,6 @@ export class FormBookAuthors {
     this.authorService.getAllAuthors().subscribe({
       next: (data) => {
         this.allAuthors = data;
-        console.log('Liste des auteurs :', this.allAuthors);
       },
       error: (err) => {
         console.error('Erreur lors du chargement des auteurs', err);
