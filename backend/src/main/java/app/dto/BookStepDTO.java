@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class BookStepDTO {
 
-    private long id;
+    private Long id;
     private ProductionStepDTO productionStep;
     private StatusDTO status;
     private LocalDate endDate;

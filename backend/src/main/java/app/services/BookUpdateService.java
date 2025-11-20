@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -129,8 +130,13 @@ public class BookUpdateService {
             return;
         }
 
+        AtomicLong counter = new AtomicLong(1L);
+
         Map<Long, BookStepDTO> dtoMap = dto.getBookSteps().stream()
-                .collect(Collectors.toMap(BookStepDTO::getId, Function.identity()));
+                .collect(Collectors.toMap(
+                        step -> counter.getAndIncrement(),
+                        Function.identity()
+                ));
 
         Set<Long> statusIds = dto.getBookSteps().stream()
                 .map(step -> step.getStatus().getId())
