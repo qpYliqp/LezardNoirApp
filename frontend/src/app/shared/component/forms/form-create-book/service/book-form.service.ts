@@ -12,7 +12,7 @@ import {TitlesOverviewService} from '../../../../../features/titles-overview/ser
 export class BookFormService {
   private readonly http = inject(HttpClient);
   private readonly titlesService = inject(TitlesOverviewService);
-  private readonly apiUrl = `${apiURL}books`;
+  private readonly apiUrl = `${apiURL}book`;
 
 
   createBook(book: BookCreationDTO): Observable<Book> {

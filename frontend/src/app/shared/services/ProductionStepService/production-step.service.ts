@@ -9,7 +9,7 @@ import {ProductionStep} from '../../models/ProductionStep';
 export class ProductionStepService {
 
 
-  private readonly apiUrl = `${apiURL}production-step`;
+  private readonly apiUrl = `${apiURL}productionstep`;
 
   constructor(private http: HttpClient) {
   }

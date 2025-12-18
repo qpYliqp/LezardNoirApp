@@ -7,6 +7,11 @@ import {Book} from '../../../shared/models/Book';
 
 @Injectable()
 export class TitlesOverviewService {
+  private readonly loadingSignal = signal<boolean>(false);
+  readonly loading = this.loadingSignal.asReadonly();
+  private readonly apiUrl = `${apiURL}book`;
+  private readonly allBooksSignal = signal<Book[]>([]);
+  readonly allBooks = this.allBooksSignal.asReadonly();
   readonly booksGrouped = computed<Map<string, Book[]>>(() => {
     const groups = new Map<string, Book[]>();
     for (const book of this.allBooks()) {
@@ -23,11 +28,6 @@ export class TitlesOverviewService {
         ])
     );
   });
-  private readonly loadingSignal = signal<boolean>(false);
-  readonly loading = this.loadingSignal.asReadonly();
-  private readonly apiUrl = `${apiURL}books`;
-  private readonly allBooksSignal = signal<Book[]>([]);
-  readonly allBooks = this.allBooksSignal.asReadonly();
 
   constructor(private readonly http: HttpClient) {
   }
