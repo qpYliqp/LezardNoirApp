@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {BookCreationDTO} from '../model/BookCreationDTO';
+import {BookFormDTO} from '../model/BookFormDTO';
 import {Book} from '../../../../models/Book';
 import {apiURL} from '../../../../../../contants';
 import {TitlesOverviewService} from '../../../../../features/titles-overview/service/titles-overview.service';
@@ -15,7 +15,7 @@ export class BookFormService {
   private readonly apiUrl = `${apiURL}book`;
 
 
-  createBook(book: BookCreationDTO): Observable<Book> {
+  createBook(book: BookFormDTO): Observable<Book> {
     const formData = this.buildFormData(book);
 
     return this.http.post<Book>(this.apiUrl, formData).pipe(
@@ -28,7 +28,7 @@ export class BookFormService {
   }
 
 
-  updateBook(bookId: number, book: BookCreationDTO): Observable<Book> {
+  updateBook(bookId: number, book: BookFormDTO): Observable<Book> {
 
     const formData = this.buildFormData(book);
     return this.http.put<Book>(`${this.apiUrl}/${bookId}`, formData).pipe(
@@ -41,36 +41,36 @@ export class BookFormService {
   }
 
 
-  private buildFormData(book: BookCreationDTO): FormData {
-    console.log("steps before transformation: ", book.bookSteps)
+  private buildFormData(book: BookFormDTO): FormData {
     const formData = new FormData();
 
-    const bookData = {
+    const bookDataForJson = {
       ...book,
       releaseDate: book.releaseDate ? book.releaseDate : null,
+      authors: book.authors.map(author => author.id),
       bookSteps: book.bookSteps.map(step => ({
-        ...step,
+        id: step.id,
+        productionStepId: step.productionStep.id,
+        statusId: step.status.id,
         endDate: step.endDate ? step.endDate : null
       }))
     };
 
-    const {coverFile, ...bookWithoutFile} = bookData;
 
-    console.log("bookSteps after transformation:", bookWithoutFile.bookSteps);
+    console.log(bookDataForJson)
 
-    const bookBlob = new Blob([JSON.stringify(bookWithoutFile)], {
-      type: 'application/json'
-    });
-    formData.append('book', bookBlob, 'book.json');
+    // On retire le fichier de l'objet JSON pour ne pas l'envoyer en doublon ou faire planter le JSON
+    // (Suppose que ton interface BookFormDTO a un champ 'coverFile' optionnel)
+    const {coverFile, ...bookDataClean} = bookDataForJson as any;
 
-    if (coverFile) {
-      formData.append('coverFile', coverFile, coverFile.name);
+    // 2. CRUCIAL : On stringify l'objet JSON et on l'ajoute comme champ texte 'book'
+    // C'est ce que le C# va récupérer dans la variable string 'book'
+    formData.append('book', JSON.stringify(bookDataClean));
+
+    // 3. Ajout du fichier binaire s'il existe
+    if (book.coverFile) {
+      formData.append('coverFile', book.coverFile, book.coverFile.name);
     }
-    const blob = formData.get('book') as Blob;
-
-    blob.text().then(text => {
-      console.log("BOOK JSON :", JSON.parse(text));
-    });
 
     return formData;
   }

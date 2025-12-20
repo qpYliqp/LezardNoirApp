@@ -1,11 +1,11 @@
 import {computed, Injectable, signal} from '@angular/core';
-import {BookCreationDTO} from '../model/BookCreationDTO';
+import {BookFormDTO} from '../model/BookFormDTO';
 import {BookFactory} from '../factories/book.factory';
 
 export type BookFormMode = 'create' | 'edit';
 
 export interface BookFormState {
-  book: BookCreationDTO;
+  book: BookFormDTO;
   mode: BookFormMode;
   isSubmitting: boolean;
   error: string | null;
@@ -39,7 +39,7 @@ export class BookFormSignalStore {
   }
 
 
-  initializeForEdit(book: BookCreationDTO): void {
+  initializeForEdit(book: BookFormDTO): void {
     console.log('Store - initializeForEdit called with:', book);
     const clonedBook = BookFactory.cloneBook(book);
     console.log('Store - cloned book:', clonedBook);
@@ -52,7 +52,7 @@ export class BookFormSignalStore {
   }
 
 
-  updateBook(updates: Partial<BookCreationDTO>): void {
+  updateBook(updates: Partial<BookFormDTO>): void {
     this.state.update(currentState => ({
       ...currentState,
       book: {

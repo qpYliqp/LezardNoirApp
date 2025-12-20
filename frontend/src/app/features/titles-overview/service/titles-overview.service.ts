@@ -1,17 +1,12 @@
 import {computed, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {catchError, finalize, map, of} from 'rxjs';
+import {finalize, map} from 'rxjs';
 import {apiURL} from '../../../../contants';
 import {BookFilter} from '../BookFilter';
 import {Book} from '../../../shared/models/Book';
 
 @Injectable()
 export class TitlesOverviewService {
-  private readonly loadingSignal = signal<boolean>(false);
-  readonly loading = this.loadingSignal.asReadonly();
-  private readonly apiUrl = `${apiURL}book`;
-  private readonly allBooksSignal = signal<Book[]>([]);
-  readonly allBooks = this.allBooksSignal.asReadonly();
   readonly booksGrouped = computed<Map<string, Book[]>>(() => {
     const groups = new Map<string, Book[]>();
     for (const book of this.allBooks()) {
@@ -28,6 +23,11 @@ export class TitlesOverviewService {
         ])
     );
   });
+  private readonly loadingSignal = signal<boolean>(false);
+  readonly loading = this.loadingSignal.asReadonly();
+  private readonly apiUrl = `${apiURL}book`;
+  private readonly allBooksSignal = signal<Book[]>([]);
+  readonly allBooks = this.allBooksSignal.asReadonly();
 
   constructor(private readonly http: HttpClient) {
   }
@@ -43,10 +43,6 @@ export class TitlesOverviewService {
     this.http.get<Book[]>(this.apiUrl, {params}).pipe(
       map(arr => arr.map(b => new Book(b))),
       map(books => books.sort((a, b) => a.title.localeCompare(b.title))),
-      catchError(err => {
-        console.error('Erreur lors du chargement des livres :', err?.message ?? err);
-        return of([] as Book[]);
-      }),
       finalize(() => this.loadingSignal.set(false)),
     ).subscribe(books => this.allBooksSignal.set(books));
   }

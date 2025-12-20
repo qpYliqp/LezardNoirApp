@@ -1,3 +1,3 @@
 export interface BookFilter {
-  startWithPrefix: string | null;
+  prefix: string | null;
 }

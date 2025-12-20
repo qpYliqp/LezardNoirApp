@@ -20,7 +20,7 @@ import {FormBookSteps} from './form-book-steps/form-book-steps.component';
 import {BookFormSignalStore} from './store/book-form.store';
 import {BookFormFacadeService} from './service/book-form-facade.service';
 import {BookFormService} from './service/book-form.service';
-import {BookCreationDTO} from './model/BookCreationDTO';
+import {BookFormDTO} from './model/BookFormDTO';
 
 
 @Component({
@@ -48,7 +48,7 @@ import {BookCreationDTO} from './model/BookCreationDTO';
 
 
 export class FormCreateBook implements OnInit, OnChanges {
-  @Input() bookToEdit?: BookCreationDTO;
+  @Input() bookToEdit?: BookFormDTO;
   @Output() closeModal = new EventEmitter<void>();
 
   currentStep: number = 0;

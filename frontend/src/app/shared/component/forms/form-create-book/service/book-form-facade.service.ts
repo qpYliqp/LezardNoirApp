@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {finalize, tap} from 'rxjs/operators';
 import {BookFormSignalStore} from '../store/book-form.store';
 import {BookFormService} from './book-form.service';
-import {BookCreationDTO} from '../model/BookCreationDTO';
+import {BookFormDTO} from '../model/BookFormDTO';
 import {Book} from '../../../../models/Book';
 
 /**
@@ -17,10 +17,7 @@ export class BookFormFacadeService {
   // Expose store signals for components to consume
   readonly book = this.store.book;
   readonly mode = this.store.mode;
-  readonly isSubmitting = this.store.isSubmitting;
   readonly error = this.store.error;
-  readonly isEditMode = this.store.isEditMode;
-  readonly isCreateMode = this.store.isCreateMode;
   private readonly apiService = inject(BookFormService);
 
 
@@ -29,12 +26,12 @@ export class BookFormFacadeService {
   }
 
 
-  initializeForEdit(book: BookCreationDTO): void {
+  initializeForEdit(book: BookFormDTO): void {
     this.store.initializeForEdit(book);
   }
 
 
-  updateBook(updates: Partial<BookCreationDTO>): void {
+  updateBook(updates: Partial<BookFormDTO>): void {
     this.store.updateBook(updates);
   }
 

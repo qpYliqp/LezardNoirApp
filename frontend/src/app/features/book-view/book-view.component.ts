@@ -1,13 +1,12 @@
 import {Component, effect, inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BookViewService} from './service/book-view.service';
-import {Location} from '@angular/common';
-import {ToastService} from '../../shared/services/ToastService/toast.service';
 import {FormCreateBook} from '../../shared/component/forms/form-create-book/form-create-book.component';
-import {BookCreationDTO} from '../../shared/component/forms/form-create-book/model/BookCreationDTO';
+import {BookFormDTO} from '../../shared/component/forms/form-create-book/model/BookFormDTO';
 import {Book} from '../../shared/models/Book';
 import {ButtonDirective} from 'primeng/button';
 import {TitlesOverviewService} from '../titles-overview/service/titles-overview.service';
+import {ToastService} from '../../shared/services/ToastService/toast.service';
 
 @Component({
   selector: 'app-book-view',
@@ -21,19 +20,18 @@ export class BookView {
   route = inject(ActivatedRoute);
   router = inject(Router)
   bookViewService = inject(BookViewService);
-  location = inject(Location);
   toastService = inject(ToastService);
   bookId: string = "";
 
   isEditing: boolean = false;
-  bookToEdit?: BookCreationDTO;
+  bookToEdit?: BookFormDTO;
 
   book = this.bookViewService.book;
 
   constructor() {
     effect(() => {
       if (this.bookViewService.error()) {
-        this.toastService.showError("Livre non trouvé", "L'id " + this.bookId + " n'existe pas");
+        // this.toastService.showError("Livre non trouvé", "L'id " + this.bookId + " n'existe pas");
         this.router.navigate(['/board']);
       }
     });
@@ -67,9 +65,9 @@ export class BookView {
   }
 
   /**
-   * Convert Book entity to BookCreationDTO for editing
+   * Convert Book entity to BookFormDTO for editing
    */
-  private convertBookToDTO(book: Book): BookCreationDTO {
+  private convertBookToDTO(book: Book): BookFormDTO {
     return {
       id: book.id,
       title: book.title,

@@ -1,4 +1,4 @@
-import {BookCreationDTO} from '../model/BookCreationDTO';
+import {BookFormDTO} from '../model/BookFormDTO';
 import {Injectable} from '@angular/core';
 import {BookStepFormDTO} from '../form-book-steps/model/BookStepFormDTO';
 
@@ -6,7 +6,7 @@ import {BookStepFormDTO} from '../form-book-steps/model/BookStepFormDTO';
 export class BookFactory {
 
 
-  static createEmptyBook(): BookCreationDTO {
+  static createEmptyBook(): BookFormDTO {
     return {
       title: "null",
       isbn: "9782723488525",
@@ -34,7 +34,7 @@ export class BookFactory {
   }
 
 
-  static createBookFromPartial(partial: Partial<BookCreationDTO>): BookCreationDTO {
+  static createBookFromPartial(partial: Partial<BookFormDTO>): BookFormDTO {
     return {
       ...BookFactory.createEmptyBook(),
       ...partial
@@ -42,7 +42,7 @@ export class BookFactory {
   }
 
 
-  static cloneBook(book: BookCreationDTO): BookCreationDTO {
+  static cloneBook(book: BookFormDTO): BookFormDTO {
     return {
       ...book,
       authors: book.authors ? [...book.authors] : [],

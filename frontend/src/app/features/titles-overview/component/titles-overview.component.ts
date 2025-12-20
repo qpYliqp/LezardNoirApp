@@ -56,7 +56,7 @@ export class TitlesOverview {
   isCreating: boolean = false;
 
   filters: BookFilter = {
-    startWithPrefix: null,
+    prefix: null,
   };
 
   searchValue: string = '';
@@ -76,7 +76,7 @@ export class TitlesOverview {
       .subscribe((value) => {
         const v = (value ?? '').trim();
         this.isFilterMode.set(!!v);
-        this.filters.startWithPrefix = v.length ? v : null;
+        this.filters.prefix = v.length ? v : null;
         this.bookService.loadAllBooks(this.filters);
       });
   }
@@ -87,7 +87,7 @@ export class TitlesOverview {
     this.searchTerm.set(this.searchValue);
     if (this.searchValue === '') {
       this.isFilterMode.set(false);
-      this.filters.startWithPrefix = null;
+      this.filters.prefix = null;
       this.bookService.loadAllBooks();
     }
   }
@@ -98,13 +98,13 @@ export class TitlesOverview {
   filter() {
     const v = (this.searchValue ?? '').trim();
     this.isFilterMode.set(!!v);
-    this.filters.startWithPrefix = v.length ? v : null;
+    this.filters.prefix = v.length ? v : null;
     this.bookService.loadAllBooks(this.filters);
   }
 
   resetFilters() {
     this.filters = {
-      startWithPrefix: null,
+      prefix: null,
     };
     this.searchValue = '';
     this.isFilterMode.set(false);
